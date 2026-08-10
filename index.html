@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly - Discover & Book Amazing Events</title>
+<meta name="description" content="Stackly is a global self-service ticketing platform for live experiences.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+                'dark-section': '#0F0F1A',
+                muted: '#6B7280',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+                script: ['Dancing Script','cursive'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0B0B1A; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.hero-bg {
+    background: linear-gradient(105deg, rgba(11,11,26,0.96) 0%, rgba(11,11,26,0.85) 35%, rgba(11,11,26,0.4) 60%, rgba(11,11,26,0.2) 100%);
+}
+
+.why-bg {
+    background: linear-gradient(180deg, #1A1A2E 0%, #0B0B1A 100%);
+}
+
+.stats-bg {
+    background: linear-gradient(90deg, #12121F 0%, #1E1E3F 50%, #12121F 100%);
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.nav-link { position: relative; }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: #E91E63; border-radius: 2px; transition: width 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.event-card { transition: transform 0.35s ease, box-shadow 0.35s ease; }
+.event-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+
+.cat-card { transition: all 0.3s ease; }
+.cat-card:hover { transform: translateY(-6px); border-color: #E91E63; box-shadow: 0 12px 30px rgba(233,30,99,0.12); }
+.cat-card:hover .cat-icon { background: #E91E63; color: white; }
+
+.blog-card { transition: all 0.35s ease; }
+.blog-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.blog-card:hover .blog-img { transform: scale(1.08); }
+
+.t-card { transition: all 0.3s ease; }
+.t-card:hover { transform: translateY(-6px); }
+
+.brand-logo { filter: grayscale(100%); opacity: 0.55; transition: all 0.3s ease; }
+.brand-logo:hover { filter: grayscale(0%); opacity: 1; }
+
+.heart-btn { transition: all 0.25s ease; }
+.heart-btn:hover { transform: scale(1.15); }
+.heart-btn.liked { color: #E91E63; }
+.heart-btn.liked i { font-weight: 900; }
+
+.vinyl { animation: spin 25s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.btn-primary {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(233,30,99,0.35);
+}
+
+.search-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233,30,99,0.15);
+    border-color: #E91E63;
+}
+
+/* Mobile menu fix */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: block;
+}
+.mobile-menu.open {
+    max-height: 600px;
+    opacity: 1;
+}
+@media (min-width: 1024px) {
+    .mobile-menu { display: none !important; }
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* No horizontal scroll */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+input:focus, select:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+     <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="nav-link active text-primary text-sm font-semibold">Home</a>
+                <a href="event.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Events</a>
+                <a href="cat.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Categories</a>
+                <a href="about.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">About Us</a>
+                <a href="blog.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+            </div>
+
+            <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu lg:hidden bg-dark-card/98 backdrop-blur-xl border-t border-white/10">
+        <div class="px-6 py-6 space-y-1">
+            <a href="index.html" class="block text-primary font-semibold py-3 border-b border-white/5">Home</a>
+            <a href="event.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Events</a>
+            <a href="cat.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Categories</a>
+            <a href="about.html" class="block text-white/80 font-medium py-3 border-b border-white/5">About Us</a>
+            <a href="blog.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Blog</a>
+            <a href="contact.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="login.html" class="text-white font-medium py-2">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary text-white px-6 py-3 rounded-full text-center font-semibold">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO SECTION ========== -->
+<section class="relative min-h-[72vh] flex items-end pb-32 lg:pb-36 overflow-hidden">    <div class="absolute inset-0 z-0">
+        <img src="img1 (1).webp" alt="Concert" class="w-full h-full object-cover">
+        <div class="hero-bg absolute inset-0"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28">
+        <div class="max-w-2xl" data-aos="fade-right" data-aos-duration="1000">
+            <p class="font-script text-primary text-3xl md:text-4xl lg:text-5xl mb-1">Experience</p>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6">
+                Aniruth Ravichandran Show<br>Ticket Package
+            </h1>
+            <p class="text-white/70 text-base md:text-lg leading-relaxed mb-8 max-w-lg">
+                At Spice & Wok, we believe that great food brings people closer. Our journey started with a passion for authentic flavors, fresh ingredients, and creating memorable dining experiences.
+            </p>
+            <div class="flex flex-wrap items-center gap-5">
+                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-8 py-3.5 rounded-full font-semibold text-sm inline-flex items-center gap-2">
+                    Explore Events
+                </a>
+                <a href="404.html" class="group flex items-center gap-3 text-white hover:text-primary transition-colors duration-300">
+                    <span class="w-12 h-12 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-primary transition-colors duration-300">
+                        <i class="fas fa-play text-xs ml-0.5"></i>
+                    </span>
+                    <span class="font-medium text-sm">How It Works</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+<div class="absolute bottom-6 left-0 right-0 z-20 px-4">        <div class="max-w-6xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+            <form id="searchForm" class="bg-white rounded-2xl shadow-2xl p-4 md:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Search Events</label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchInput" placeholder="Concerts, Festivals, Sports..." required
+                               class="search-field w-full pl-10 pr-3 py-2.5 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-transparent transition-all">
+                    </div>
+                </div>
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Location</label>
+                    <div class="relative">
+                        <i class="fas fa-map-marker-alt absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <select id="searchLocation" class="search-field w-full pl-10 pr-8 py-2.5 bg-gray-50 rounded-xl text-sm text-gray-800 border border-transparent appearance-none cursor-pointer transition-all">
+                            <option value="">Select Location</option>
+                            <option>New York</option>
+                            <option>Los Angeles</option>
+                            <option>Chicago</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]"></i>
+                    </div>
+                </div>
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Date</label>
+                    <div class="relative">
+                        <i class="fas fa-calendar absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchDate" placeholder="Select Date" 
+                               onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"
+                               class="search-field w-full pl-10 pr-3 py-2.5 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-transparent transition-all">
+                    </div>
+                </div>
+                <div class="relative">
+                    <label class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Category</label>
+                    <div class="relative">
+                        <i class="fas fa-tag absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <select id="searchCategory" class="search-field w-full pl-10 pr-8 py-2.5 bg-gray-50 rounded-xl text-sm text-gray-800 border border-transparent appearance-none cursor-pointer transition-all">
+                            <option value="">All Categories</option>
+                            <option>Music</option>
+                            <option>Sports</option>
+                            <option>Comedy</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]"></i>
+                    </div>
+                </div>
+                <div class="pt-5 sm:pt-0">
+                    <button type="submit" class="btn-primary block w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-semibold text-sm text-center">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="h-24 md:h-20"></div>
+<!-- ========== UPCOMING EVENTS ========== -->
+<section class="py-16 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between mb-10" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-dark">Upcoming Events</h2>
+            <a href="404.html" class="hidden sm:flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-300">
+                View All Events <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img2.webp" alt="Arijit Singh" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">28</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">May</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Music</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Arijit Singh Live In Concert</h3>
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹999</span>
+                </div>
+            </div>
+
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="80">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img3 (1).webp" alt="Summer Music" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">04</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">Jun</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Festival</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Summer Music Festival 2024</h3>
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹1499</span>
+                </div>
+            </div>
+
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="160">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img4.webp" alt="Comedy" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">11</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">Jun</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Comedy</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Standup Comedy Live Show</h3>
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹499</span>
+                </div>
+            </div>
+
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="240">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img5 (4).webp" alt="Kabaddi" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">18</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">Jun</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Sports</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Pro Kabaddi League</h3>
+                                            <span class="block text-base font-bold text-primary leading-tight">18</span>
+
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹499</span>
+                </div>
+            </div>
+
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="320">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img2.webp" alt="Photography" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">25</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">Jun</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Workshop</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Photography Workshop</h3>
+                                            <span class="block text-base font-bold text-primary leading-tight">2018</span>
+
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹899</span>
+                </div>
+            </div>
+
+            <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="400">
+                <div class="relative h-44 overflow-hidden">
+                    <img src="img1 (1).webp" alt="Club Night" class="w-full h-full object-cover">
+                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur rounded-lg px-2 py-1.5 text-center min-w-[40px]">
+                        <span class="block text-base font-bold text-primary leading-tight">02</span>
+                        <span class="block text-[9px] font-bold text-gray-500 uppercase tracking-wide">Jul</span>
+                    </div>
+                    <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite">
+                        <i class="far fa-heart text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Party</span>
+                    <h3 class="font-bold text-dark text-[13px] mt-1 mb-1 leading-snug">Club Night Party</h3>
+                                            <span class="block text-base font-bold text-primary leading-tight">workshop</span>
+
+                    <div class="flex items-center gap-1 text-gray-400 text-[11px] mb-2">
+                        <i class="fas fa-map-marker-alt text-[9px]"></i>
+                        <span>Chennai, India</span>
+                    </div>
+                    <span class="text-primary font-bold text-sm">From ₹1299</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center sm:hidden">
+            <a href="404.html" class="inline-flex items-center gap-2 text-primary font-semibold text-sm">
+                View All Events <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== BROWSE BY CATEGORY ========== -->
+<section class="py-16 md:py-20 bg-gray-50/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark mb-10" data-aos="fade-up">Browse by Category</h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 gap-4">
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="0">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-music text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Music</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-guitar text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Festival</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-laugh-beam text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Comedy</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-futbol text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Sports</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-tools text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Workshop</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="250">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-glass-cheers text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Party</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-palette text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Art & Culture</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3" data-aos="fade-up" data-aos-delay="350">
+                <div class="cat-icon w-14 h-14 rounded-full bg-primary-light flex items-center justify-center transition-all duration-300">
+                    <i class="fas fa-utensils text-primary text-xl"></i>
+                </div>
+                <span class="text-sm font-semibold text-dark">Food & Drinks</span>
+            </a>
+            <a href="404.html" class="cat-card bg-white rounded-2xl p-5 border border-gray-100 flex flex-col items-center text-center gap-3 group" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-all duration-300">
+                    <i class="fas fa-arrow-right text-primary text-xl group-hover:text-white transition-colors"></i>
+                </div>
+                <span class="text-sm font-semibold text-primary">View All</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== WHY CHOOSE US ========== -->
+<section class="py-24 why-bg relative overflow-hidden">
+    <div class="absolute -left-16 top-1/2 -translate-y-1/2 w-40 h-40 opacity-[0.08] hidden lg:block">
+        <img src="img9 (2).webp" alt="" class="w-full h-full object-cover rounded-full vinyl">
+    </div>
+    <div class="absolute -right-12 bottom-16 w-32 h-32 opacity-[0.08] hidden lg:block">
+        <img src="reddy.webp" alt="" class="w-full h-full object-cover rounded-full vinyl" style="animation-direction:reverse;">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="relative" data-aos="fade-right">
+                <div class="relative max-w-md mx-auto lg:mx-0">
+                    <img src="men.webp" alt="Event experience" class="rounded-3xl shadow-2xl w-full">
+                    <div class="absolute -bottom-5 -right-5 bg-white rounded-2xl p-4 shadow-xl hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-star text-primary text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-dark text-sm">4.9/5</p>
+                                <p class="text-[11px] text-gray-500">User Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div data-aos="fade-left">
+                <p class="font-script text-primary text-3xl md:text-4xl mb-1">Why choose us</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-10 leading-tight">
+                    Making Your Event Experience<br>Seamless & Memorable
+                </h2>
+
+                <div class="grid sm:grid-cols-2 gap-x-8 gap-y-8">
+                    <div class="group">
+                        <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-3 group-hover:bg-primary/25 transition-colors">
+                            <i class="fas fa-calendar-check text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-base mb-1.5">Easy Booking</h3>
+                        <p class="text-white/55 text-[13px] leading-relaxed">Book tickets in just a few clicks with our streamlined booking process.</p>
+                    </div>
+                    <div class="group">
+                        <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-3 group-hover:bg-primary/25 transition-colors">
+                            <i class="fas fa-shield-alt text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-base mb-1.5">Secure Payment</h3>
+                        <p class="text-white/55 text-[13px] leading-relaxed">100% secure payments with multiple options and encryption.</p>
+                    </div>
+                    <div class="group">
+                        <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-3 group-hover:bg-primary/25 transition-colors">
+                            <i class="fas fa-ticket-alt text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-base mb-1.5">Instant Tickets</h3>
+                        <p class="text-white/55 text-[13px] leading-relaxed">Get your tickets instantly on email & mobile after purchase.</p>
+                    </div>
+                    <div class="group">
+                        <div class="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center mb-3 group-hover:bg-primary/25 transition-colors">
+                            <i class="fas fa-headset text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-base mb-1.5">24/7 Support</h3>
+                        <p class="text-white/55 text-[13px] leading-relaxed">We are here to help you anytime with our dedicated support team.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== STATS ========== -->
+<section class="stats-bg py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center" data-aos="fade-up" data-aos-delay="0">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <i class="fas fa-calendar-alt text-primary text-xl"></i>
+                    <span class="text-3xl md:text-4xl font-bold text-white">10K+</span>
+                </div>
+                <p class="text-white/50 text-sm">Events Hosted</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <i class="fas fa-ticket-alt text-primary text-xl"></i>
+                    <span class="text-3xl md:text-4xl font-bold text-white">500K+</span>
+                </div>
+                <p class="text-white/50 text-sm">Tickets Sold</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <i class="fas fa-users text-primary text-xl"></i>
+                    <span class="text-3xl md:text-4xl font-bold text-white">50K+</span>
+                </div>
+                <p class="text-white/50 text-sm">Happy Customers</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center justify-center gap-3 mb-1">
+                    <i class="fas fa-map-marker-alt text-primary text-xl"></i>
+                    <span class="text-3xl md:text-4xl font-bold text-white">200+</span>
+                </div>
+                <p class="text-white/50 text-sm">Cities Covered</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== BRANDS ========== -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark mb-3" data-aos="fade-up">Join these brands</h2>
+        <p class="text-muted max-w-lg mx-auto mb-12 text-sm" data-aos="fade-up" data-aos-delay="50">
+            We've had the pleasure of working with industry-defining brands. These are just some of them.
+        </p>
+        <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8 md:gap-x-16" data-aos="fade-up" data-aos-delay="100">
+            <div class="brand-logo flex items-center gap-2 text-xl md:text-2xl font-bold text-green-500 cursor-pointer">
+                <i class="fab fa-spotify text-2xl md:text-3xl"></i><span>Spotify</span>
+            </div>
+            <div class="brand-logo text-xl md:text-2xl font-bold cursor-pointer">
+                <span class="text-blue-500">G</span><span class="text-red-500">o</span><span class="text-yellow-500">o</span><span class="text-blue-500">g</span><span class="text-green-500">l</span><span class="text-red-500">e</span>
+            </div>
+            <div class="brand-logo text-xl md:text-2xl font-bold text-purple-600 cursor-pointer">stripe</div>
+            <div class="brand-logo flex items-center gap-2 text-xl md:text-2xl font-bold text-red-600 cursor-pointer">
+                <i class="fab fa-youtube text-2xl md:text-3xl"></i><span>YouTube</span>
+            </div>
+            <div class="brand-logo flex items-center gap-2 text-xl md:text-2xl font-bold text-gray-700 cursor-pointer">
+                <i class="fab fa-microsoft text-2xl md:text-3xl"></i><span>Microsoft</span>
+            </div>
+            <div class="brand-logo text-xl md:text-2xl font-bold text-blue-500 cursor-pointer">zoom</div>
+            <div class="brand-logo text-xl md:text-2xl font-bold text-gray-900 cursor-pointer">Uber</div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="py-24 bg-gray-50/60 relative overflow-hidden">
+    <div class="absolute -left-14 top-1/2 -translate-y-1/2 w-36 h-36 opacity-[0.07] hidden lg:block">
+        <img src="asha.webp" alt="" class="w-full h-full object-cover rounded-full vinyl">
+    </div>
+    <div class="absolute -right-14 top-1/2 -translate-y-1/2 w-36 h-36 opacity-[0.07] hidden lg:block">
+        <img src="men.webp" alt="" class="w-full h-full object-cover rounded-full vinyl" style="animation-direction:reverse;">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-14">
+            <p class="font-script text-primary text-3xl md:text-4xl mb-1" data-aos="fade-up">What People say</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-dark" data-aos="fade-up" data-aos-delay="50">Our Happy Attendees</h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-7 max-w-5xl mx-auto">
+            <div class="t-card bg-white rounded-2xl p-7 shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="0">
+                <div class="text-primary text-5xl font-serif leading-none mb-3">"</div>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Amazing experience! The booking  was so smooth and   is excellent.
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="asha.webp" alt="Priya" class="w-11 h-11 rounded-full object-cover">
+                    <div>
+                        <h4 class="font-bold text-dark text-sm">Priya Sharma</h4>
+                        <div class="flex gap-0.5 text-yellow-400 text-[10px]">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="t-card bg-white rounded-2xl p-7 shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-primary text-5xl font-serif leading-none mb-3">"</div>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Found the best concert tickets here. Will definitely use Evently again!
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="reddy.webp" alt="Rohit" class="w-11 h-11 rounded-full object-cover">
+                    <div>
+                        <h4 class="font-bold text-dark text-sm">Rohit Verma</h4>
+                        <div class="flex gap-0.5 text-yellow-400 text-[10px]">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="t-card bg-white rounded-2xl p-7 shadow-sm border border-gray-100" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-primary text-5xl font-serif leading-none mb-3">"</div>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Great platform for discovering events. Love the new updates and offers.
+                </p>
+                <div class="flex items-center gap-3">
+                    <img src="men.webp" alt="Anjali" class="w-11 h-11 rounded-full object-cover">
+                    <div>
+                        <h4 class="font-bold text-dark text-sm">Anjali Mehta</h4>
+                        <div class="flex gap-0.5 text-yellow-400 text-[10px]">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-2 mt-10">
+            <button class="w-6 h-2 rounded-full bg-primary transition-all" aria-label="1"></button>
+            <button class="w-2 h-2 rounded-full bg-gray-300 hover:bg-primary/50 transition-all" aria-label="2"></button>
+            <button class="w-2 h-2 rounded-full bg-gray-300 hover:bg-primary/50 transition-all" aria-label="3"></button>
+            <button class="w-2 h-2 rounded-full bg-gray-300 hover:bg-primary/50 transition-all" aria-label="4"></button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== BLOG ========== -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between mb-10" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-dark">Latest from Blog</h2>
+            <a href="404.html" class="hidden sm:flex items-center gap-2 text-primary font-semibold text-sm hover:gap-3 transition-all duration-300">
+                View All Posts <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="img1 (2).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                    <span class="absolute top-4 left-4 bg-primary text-white text-[11px] font-bold px-3 py-1 rounded-full">Event Tips</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-3">
+                        <span>MAY 20, 2024</span><span class="w-1 h-1 rounded-full bg-gray-300"></span><span>5 MIN READ</span>
+                    </div>
+                    <h3 class="font-bold text-dark text-base mb-2 leading-snug hover:text-primary transition-colors">
+                        <a href="404.html">10 Tips for Hosting a Successful Event</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Learn the best strategies to plan and host events that leave a lasting impression.</p>
+                </div>
+            </article>
+
+            <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="img8 (2).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                    <span class="absolute top-4 left-4 bg-primary text-white text-[11px] font-bold px-3 py-1 rounded-full">Planning</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-3">
+                        <span>MAY 18, 2024</span><span class="w-1 h-1 rounded-full bg-gray-300"></span><span>4 MIN READ</span>
+                    </div>
+                    <h3 class="font-bold text-dark text-base mb-2 leading-snug hover:text-primary transition-colors">
+                        <a href="404.html">How to Plan a Corporate Event</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">A step-by-step guide to planning seamless corporate events your attendees will love.</p>
+                </div>
+            </article>
+
+            <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="img3 (1).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                    <span class="absolute top-4 left-4 bg-primary text-white text-[11px] font-bold px-3 py-1 rounded-full">Trends</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-3">
+                        <span>MAY 15, 2024</span><span class="w-1 h-1 rounded-full bg-gray-300"></span><span>6 MIN READ</span>
+                    </div>
+                    <h3 class="font-bold text-dark text-base mb-2 leading-snug hover:text-primary transition-colors">
+                        <a href="404.html">Top Event Trends to Watch in 2024</a>
+                    </h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Stay ahead with the latest trends shaping the future of events.</p>
+                </div>
+            </article>
+        </div>
+
+        <div class="mt-8 text-center sm:hidden">
+            <a href="404.html" class="inline-flex items-center gap-2 text-primary font-semibold text-sm">
+                View All Posts <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-16 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-72 h-72 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="text-center lg:text-left" data-aos="fade-right">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">Stay Updated with Stackly</h2>
+                <p class="text-white/75 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form id="newsForm" class="w-full max-w-md" data-aos="fade-left">
+                <div class="flex flex-col sm:flex-row gap-2 bg-white rounded-2xl sm:rounded-full p-2">
+                    <input type="email" id="newsEmail" placeholder="Enter your email" required
+                           class="flex-1 px-5 py-3 rounded-xl sm:rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="bg-dark hover:bg-dark-card text-white px-7 py-3 rounded-xl sm:rounded-full font-semibold text-sm whitespace-nowrap transition-all">
+                        Subscribe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+                <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/50 text-sm leading-relaxed mb-6">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-3">
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/50 text-sm mb-4 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form id="footerForm" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="footerEmail" placeholder="Enter your email address..." required
+                           class="flex-1 min-w-0 px-4 py-2.5 bg-white/10 rounded-lg text-sm text-white placeholder-white/40 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap shrink-0 transition-all">
+                        Subscribe Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/30 text-xs">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true, offset: 80, easing: 'ease-out-cubic' });
+
+// Navbar scroll
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+        navbar.classList.add('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    } else {
+        navbar.classList.remove('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    }
+});
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        menuBtn.innerHTML = menuOpen ? '<i class="fas fa-times text-xl"></i>' : '<i class="fas fa-bars text-xl"></i>';
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            menuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Heart / favorite buttons
+document.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.toggle('liked');
+        const icon = this.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+        }
+    });
+});
+
+// Clear all forms on page load / back navigation from 404
+window.addEventListener('load', () => {
+    document.querySelectorAll('form').forEach(f => f.reset());
+});
+window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+        document.querySelectorAll('form').forEach(f => f.reset());
+    }
+});
+
+// Search form validation
+const searchForm = document.getElementById('searchForm');
+if (searchForm) {
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const searchVal = document.getElementById('searchInput').value.trim();
+        if (!searchVal) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        alert('Thank you! Searching for events...');
+        searchForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Newsletter form validation
+const newsForm = document.getElementById('newsForm');
+const newsEmail = document.getElementById('newsEmail');
+if (newsForm && newsEmail) {
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = newsEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        newsForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Footer form validation
+const footerForm = document.getElementById('footerForm');
+const footerEmail = document.getElementById('footerEmail');
+if (footerForm && footerEmail) {
+    footerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = footerEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        footerForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>

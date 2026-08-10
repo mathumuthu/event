@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories - Stackly</title>
+<meta name="description" content="Browse events by category on Stackly.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.hero-bg {
+    background: linear-gradient(180deg, rgba(11,11,26,0.3) 0%, rgba(11,11,26,0.6) 50%, rgba(11,11,26,0.95) 100%),
+                url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.nav-link { position: relative; }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: #E91E63; border-radius: 2px; transition: width 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.cat-card { transition: all 0.35s ease; }
+.cat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 45px rgba(0,0,0,0.12); }
+.cat-card:hover .cat-img { transform: scale(1.05); }
+
+.cat-item { transition: all 0.2s ease; cursor: pointer; }
+.cat-item:hover { background: #FCE4EC; }
+.cat-item.active { background: #FCE4EC; }
+
+.btn-primary {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(233,30,99,0.3);
+}
+
+.btn-outline {
+    transition: all 0.3s ease;
+}
+.btn-outline:hover {
+    background: white; color: #0B0B1A;
+}
+
+.search-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233,30,99,0.12);
+}
+
+/* Mobile menu fix */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: block;
+}
+.mobile-menu.open {
+    max-height: 600px;
+    opacity: 1;
+}
+@media (min-width: 1024px) {
+    .mobile-menu { display: none !important; }
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* No horizontal scroll */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+input:focus, select:focus { outline: none; }
+</style>
+
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+           <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Home</a>
+                <a href="event.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Events</a>
+                <a href="cat.html" class="nav-link active text-primary text-sm font-semibold">Categories</a>
+                <a href="about.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">About Us</a>
+                <a href="blog.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+            </div>
+
+            <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu lg:hidden bg-dark-card/98 backdrop-blur-xl border-t border-white/10">
+        <div class="px-6 py-6 space-y-1">
+            <a href="index.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Home</a>
+            <a href="event.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Events</a>
+            <a href="cat.html" class="block text-primary font-semibold py-3 border-b border-white/5">Categories</a>
+            <a href="about.html" class="block text-white/80 font-medium py-3 border-b border-white/5">About Us</a>
+            <a href="blog.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Blog</a>
+            <a href="contact.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="login.html" class="text-white font-medium py-2">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary text-white px-6 py-3 rounded-full text-center font-semibold">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero-bg pt-24 pb-36 relative">
+    <div class="max-w-4xl mx-auto px-4 text-center pt-12 pb-4" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            Browse by <span class="text-primary">Categories</span>
+        </h1>
+        <p class="text-white/70 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+            Discover events that match your passion.<br>Connect, celebrate, and create unforgettable<br>memories.
+        </p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="absolute bottom-0 left-0 right-0 transform translate-y-1/2 z-10 px-4">
+        <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+            <form id="catSearchForm" class="bg-white rounded-2xl shadow-2xl p-3 flex flex-col sm:flex-row items-center gap-2">
+                <div class="flex-1 w-full">
+                    <label class="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider px-1">SEARCH</label>
+                    <div class="flex items-center gap-2 px-3 py-2">
+                        <input type="text" id="catSearchInput" placeholder="Search categories, events..." class="w-full text-sm text-gray-700 placeholder-gray-400 bg-transparent border-0 focus:ring-0 p-0">
+                        <i class="fas fa-search text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+                <div class="flex-1 w-full border-t sm:border-t-0 sm:border-l border-gray-100">
+                    <label class="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider px-1">LOCATION</label>
+                    <div class="flex items-center gap-2 px-3 py-2">
+                        <input type="text" placeholder="Select location" class="w-full text-sm text-gray-700 placeholder-gray-400 bg-transparent border-0 focus:ring-0 p-0">
+                        <i class="fas fa-map-marker-alt text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+                <div class="flex-1 w-full border-t sm:border-t-0 sm:border-l border-gray-100 hidden sm:block">
+                    <label class="block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider px-1">SORT BY</label>
+                    <div class="flex items-center gap-2 px-3 py-2">
+                        <select class="w-full text-sm text-gray-700 bg-transparent border-0 focus:ring-0 p-0 cursor-pointer appearance-none">
+                            <option>Popular</option>
+                            <option>Latest</option>
+                            <option>Price</option>
+                        </select>
+                        <i class="fas fa-chevron-down text-gray-400 text-[10px]"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-7 py-3 rounded-xl font-semibold text-sm whitespace-nowrap w-full sm:w-auto mt-2 sm:mt-0">Apply Filters</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Spacer -->
+<div class="h-12 md:h-10"></div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<section class="py-8 bg-gray-50/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="w-full lg:w-60 flex-shrink-0" data-aos="fade-right">
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 lg:sticky lg:top-24">
+                    <h3 class="font-bold text-dark text-sm mb-1">Categories</h3>
+                    <p class="text-gray-400 text-xs mb-4">Browse by interest</p>
+
+                    <div class="space-y-1" id="categoryList">
+                        <div class="cat-item active flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-list text-primary text-xs w-4 text-center"></i>
+                                <span class="font-semibold text-primary">All Categories</span>
+                            </div>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-music text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Music</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">128</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-guitar text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Festival</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">110</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-laugh-beam text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Comedy</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">64</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-briefcase text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Business</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">42</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-futbol text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Sports</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">45</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-tools text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Workshop</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">40</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-glass-cheers text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Party</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">39</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-palette text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Art & Culture</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">38</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-utensils text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Food and drink</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">23</span>
+                        </div>
+                        <div class="cat-item flex items-center justify-between px-3 py-2.5 rounded-lg text-sm cursor-pointer" onclick="setCatActive(this)">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-ellipsis-h text-gray-400 text-xs w-4 text-center"></i>
+                                <span class="text-gray-600">Others</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-medium">17</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Event CTA -->
+                <div class="mt-5 bg-primary rounded-2xl p-5 text-white relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-sm mb-1 leading-snug">Can't find what you're looking for?</h4>
+                        <p class="text-white/70 text-xs mb-4 leading-relaxed">Create an event and let people discover it.</p>
+                        <a href="404.html" class="inline-block bg-white text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-white/90 transition-colors">Create Event</a>
+                    </div>
+                    <div class="absolute bottom-2 right-2 text-white/10 text-6xl">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- RIGHT CATEGORY CARDS -->
+            <div class="flex-1">
+                <div class="flex items-end justify-between mb-6" data-aos="fade-up">
+                    <div>
+                        <h2 class="text-2xl font-bold text-dark">All Categories</h2>
+                        <p class="text-gray-400 text-sm mt-1">Explore 490+ events across all categories</p>
+                    </div>
+                    <p class="text-gray-400 text-xs hidden sm:block">Showing 12 of 490 events</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img1 (1).webp" alt="Music" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-music text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Music</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">128 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Concerts, live shows, music festivals and more</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img2.webp" alt="Comedy" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-laugh-beam text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Comedy</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">64 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Stand-up shows, comedy nights and hilarious events</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img3 (1).webp" alt="Business" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-briefcase text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Business</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">42 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Conferences, seminars, networking and business events</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img4.webp" alt="Art" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-palette text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Art & Culture</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">38 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Exhibitions, theater, cultural shows and more</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img8 (2).webp" alt="Food" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-utensils text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Food & Drink</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">29 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Food festivals, wine tasting, cooking classes and more</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Sports" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-futbol text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Sports</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">29 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Matches, tournaments, fitness events and more</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img9 (2).webp" alt="Workshop" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-tools text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Workshops</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">26 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Hands on workshop, Training, Skill developed workshop</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img3 (1).webp" alt="Festival" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-guitar text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Festival</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">12 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Seasonal festival, Colorations, Special event</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img10.webp" alt="Comedy" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-laugh-beam text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Comedy</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">64 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Stand-up shows, comedy nights and hilarious events</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img11 (1).webp" alt="Music" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-music text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Music</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">128 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Concerts, live shows, music festivals and more</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Comedy" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-laugh-beam text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Comedy</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">64 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Stand-up shows, comedy nights and hilarious events</p>
+                        </div>
+                    </a>
+
+                    <a href="404.html" class="cat-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="img8 (2).webp" alt="Business" class="cat-img w-full h-full object-cover transition-transform duration-500">
+                            <div class="absolute bottom-3 left-3 w-9 h-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                                <i class="fas fa-briefcase text-primary text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-dark text-sm mb-0.5">Business</h3>
+                            <p class="text-primary text-xs font-semibold mb-2">42 Events</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">Conferences, seminars, networking and business events</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CTA BANNER ========== -->
+<section class="py-10 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-dark rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6" data-aos="fade-up">
+            <div class="text-center md:text-left">
+                <h3 class="text-xl md:text-2xl font-bold text-white mb-1">Don't see a category you're looking for?</h3>
+                <p class="text-white/50 text-sm">Explore all events or create your own event.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <a href="404.html" class="btn-outline border border-white/30 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-white hover:text-dark transition-all text-center">Explore All Events</a>
+                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold text-center">Create Event</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-14 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left" data-aos="fade-right">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Stay Updated with Stackly</h2>
+                <p class="text-white/70 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form id="newsForm" class="w-full max-w-md" data-aos="fade-left">
+                <div class="flex gap-2 bg-white rounded-full p-1.5">
+                    <input type="email" id="newsEmail" placeholder="Enter your email" required class="flex-1 px-4 py-2.5 rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+                <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/50 text-sm leading-relaxed mb-6">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-3">
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/50 text-sm mb-4 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form id="footerForm" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="footerEmail" placeholder="Enter your email address..." required
+                           class="flex-1 min-w-0 px-4 py-2.5 bg-white/10 rounded-lg text-sm text-white placeholder-white/40 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap shrink-0 transition-all">
+                        Subscribe Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/30 text-xs">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true, offset: 80, easing: 'ease-out-cubic' });
+
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+        navbar.classList.add('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    } else {
+        navbar.classList.remove('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    }
+});
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        menuBtn.innerHTML = menuOpen ? '<i class="fas fa-times text-xl"></i>' : '<i class="fas fa-bars text-xl"></i>';
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            menuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Category sidebar active state
+function setCatActive(el) {
+    document.querySelectorAll('.cat-item').forEach(item => {
+        item.classList.remove('active');
+        const icon = item.querySelector('i');
+        const span = item.querySelector('span');
+        if (icon) { icon.classList.remove('text-primary'); icon.classList.add('text-gray-400'); }
+        if (span) { span.classList.remove('font-semibold', 'text-primary'); span.classList.add('text-gray-600'); }
+    });
+    el.classList.add('active');
+    const icon = el.querySelector('i');
+    const span = el.querySelector('span');
+    if (icon) { icon.classList.remove('text-gray-400'); icon.classList.add('text-primary'); }
+    if (span) { span.classList.remove('text-gray-600'); span.classList.add('font-semibold', 'text-primary'); }
+}
+
+// Clear all forms on page load / back navigation from 404
+window.addEventListener('load', () => {
+    document.querySelectorAll('form').forEach(f => f.reset());
+});
+window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+        document.querySelectorAll('form').forEach(f => f.reset());
+    }
+});
+
+// Category search form
+const catSearchForm = document.getElementById('catSearchForm');
+const catSearchInput = document.getElementById('catSearchInput');
+if (catSearchForm && catSearchInput) {
+    catSearchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = catSearchInput.value.trim();
+        if (!val) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        alert('Thank you! Searching categories...');
+        catSearchForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Newsletter form validation
+const newsForm = document.getElementById('newsForm');
+const newsEmail = document.getElementById('newsEmail');
+if (newsForm && newsEmail) {
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = newsEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        newsForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Footer form validation
+const footerForm = document.getElementById('footerForm');
+const footerEmail = document.getElementById('footerEmail');
+if (footerForm && footerEmail) {
+    footerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = footerEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        footerForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>

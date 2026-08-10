@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Stackly</title>
+<meta name="description" content="Create your Stackly account to discover amazing events.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+                script: ['Dancing Script','cursive'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html, body { height: 100%; }
+
+.left-bg {
+    background: linear-gradient(135deg, #0B0B1A 0%, #12121F 50%, #0B0B1A 100%);
+}
+
+.right-bg {
+    background: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80') center/cover no-repeat;
+    position: relative;
+}
+.right-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(11,11,26,0.5) 0%, rgba(11,11,26,0.2) 40%, rgba(11,11,26,0.4) 100%);
+}
+
+/* Custom checkbox */
+.custom-checkbox {
+    appearance: none;
+    width: 16px; height: 16px;
+    border: 2px solid #E91E63;
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+.custom-checkbox:checked {
+    background: #E91E63;
+    border-color: #E91E63;
+}
+.custom-checkbox:checked::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 9px;
+}
+
+.input-field {
+    transition: all 0.3s ease;
+}
+.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233,30,99,0.15);
+    border-color: #E91E63;
+}
+
+.btn-signup {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.btn-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(233,30,99,0.35);
+}
+.btn-signup:active { transform: translateY(0); }
+
+.google-btn {
+    transition: all 0.3s ease;
+}
+.google-btn:hover {
+    border-color: #E91E63;
+    box-shadow: 0 4px 15px rgba(233,30,99,0.1);
+}
+
+/* Error message animation */
+.error-msg {
+    animation: shake 0.4s ease-in-out;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Success overlay */
+.success-overlay {
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Or divider */
+.or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+}
+
+input:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-dark min-h-screen">
+
+<div class="flex min-h-screen flex-col lg:flex-row">
+
+    <!-- LEFT SIDE: Sign Up Form -->
+    <div class="left-bg w-full lg:w-1/2 xl:w-[45%] flex items-center justify-center px-6 py-10 lg:px-12 xl:px-20 relative">
+        <div class="w-full max-w-md">
+
+            <!-- Welcome Text -->
+            <div class="mb-6">
+                <h1 class="font-script text-primary text-4xl md:text-5xl mb-2">Create an Account</h1>
+                <p class="text-white/60 text-sm">Discover a better way of spandings with Stackly.</p>
+            </div>
+
+            <!-- Google Sign Up -->
+            <a href="404.html" class="google-btn block w-full bg-white rounded-xl py-3 px-4 border border-gray-200 flex items-center justify-center gap-3 mb-6 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span class="text-dark text-sm font-medium">Sign up with Google</span>
+            </a>
+
+            <!-- Or Divider -->
+            <div class="or-divider text-white/50 text-sm mb-6">
+                <span>Or</span>
+            </div>
+
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="space-y-4" novalidate>
+
+                <!-- Name Field -->
+                <div>
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+                            <i class="far fa-user text-sm"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            placeholder="Type your name" 
+                            class="input-field w-full pl-11 pr-4 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
+                            required
+                        >
+                    </div>
+                    <p id="nameError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+                            <i class="far fa-envelope text-sm"></i>
+                        </div>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            placeholder="Enter your Email" 
+                            class="input-field w-full pl-11 pr-4 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
+                            required
+                        >
+                    </div>
+                    <p id="emailError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+                            <i class="fas fa-lock text-sm"></i>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="Password (8 chars: A-Z, a-z, 0-9)" 
+                            maxlength="8"
+                            class="input-field w-full pl-11 pr-11 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
+                            required
+                        >
+                        <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors" aria-label="Show password">
+                            <i class="fas fa-eye text-sm"></i>
+                        </button>
+                    </div>
+                    <p id="passwordError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div>
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+                            <i class="fas fa-lock text-sm"></i>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            placeholder="Confirm Password" 
+                            maxlength="8"
+                            class="input-field w-full pl-11 pr-11 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
+                            required
+                        >
+                        <button type="button" id="toggleConfirmPassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors" aria-label="Show confirm password">
+                            <i class="fas fa-eye text-sm"></i>
+                        </button>
+                    </div>
+                    <p id="confirmPasswordError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                </div>
+
+                <!-- Terms Checkbox -->
+                <div>
+                    <label class="flex items-center gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="terms" class="custom-checkbox">
+                        <span class="text-white/70 text-sm">I agree with <a href="404.html" class="text-primary hover:underline">Terms</a> and <a href="404.html" class="text-primary hover:underline">Privacy</a></span>
+                    </label>
+                    <p id="termsError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+                </div>
+
+                <!-- Sign Up Button -->
+                <button type="submit" id="signupBtn" class="btn-signup w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-full font-semibold text-sm">
+                    Sign up
+                </button>
+
+                <!-- Back to Login -->
+                <a href="login.html" class="w-full flex items-center justify-center gap-2 border border-white/20 hover:border-primary text-white/80 hover:text-primary py-3 rounded-full font-semibold text-sm transition-all">
+                    <i class="fas fa-arrow-left text-xs"></i>
+                    Back to Login
+                </a>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE: Welcome Image -->
+    <div class="right-bg hidden lg:flex lg:w-1/2 xl:w-[55%] items-center justify-center relative">
+        <div class="relative z-10 text-center px-12 max-w-lg">
+            <p class="font-script text-primary text-4xl md:text-5xl mb-4">Welcome Back!</p>
+            <div class="w-12 h-0.5 bg-primary mx-auto mb-6 rounded-full"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+                Sign up to your Event<br>experience
+            </h2>
+            <p class="text-white/70 text-sm leading-relaxed">
+                Access your account to discover amazing events.<br>
+                Bookk tickets and create unforgettable<br>movements
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay" class="fixed inset-0 bg-dark/90 backdrop-blur-sm z-50 hidden items-center justify-center">
+    <div class="success-overlay bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check text-green-500 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-dark mb-2">Sign Up Successful!</h3>
+        <p class="text-gray-500 text-sm mb-1">Your account has been created successfully.</p>
+        <p class="text-gray-400 text-xs">Redirecting you...</p>
+    </div>
+</div>
+
+<script>
+const signupForm = document.getElementById('signupForm');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const confirmPasswordInput = document.getElementById('confirmPassword');
+const termsInput = document.getElementById('terms');
+const nameError = document.getElementById('nameError');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
+const confirmPasswordError = document.getElementById('confirmPasswordError');
+const termsError = document.getElementById('termsError');
+const successOverlay = document.getElementById('successOverlay');
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const nameRegex = /^[a-zA-Z\s]+$/;
+
+function showError(element, message) {
+    element.textContent = message;
+    element.classList.remove('hidden');
+    element.classList.add('error-msg');
+    setTimeout(() => element.classList.remove('error-msg'), 400);
+}
+
+function hideError(element) {
+    element.classList.add('hidden');
+    element.textContent = '';
+}
+
+function validateName() {
+    const value = nameInput.value.trim();
+    if (!value) {
+        showError(nameError, 'Name is required.');
+        nameInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    if (!nameRegex.test(value)) {
+        showError(nameError, 'Name must contain only letters (A-Z, a-z).');
+        nameInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    hideError(nameError);
+    nameInput.style.borderColor = 'transparent';
+    return true;
+}
+
+function validateEmail() {
+    const value = emailInput.value.trim();
+    if (!value) {
+        showError(emailError, 'Email is required.');
+        emailInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    if (!emailRegex.test(value)) {
+        showError(emailError, 'Please enter a valid email address.');
+        emailInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    hideError(emailError);
+    emailInput.style.borderColor = 'transparent';
+    return true;
+}
+
+function validatePassword() {
+    const value = passwordInput.value;
+
+    if (!value) {
+        showError(passwordError, 'Password is required.');
+        passwordInput.style.borderColor = '#ef4444';
+        return false;
+    }
+
+    // Exactly 8 characters with at least:
+    // 1 uppercase letter, 1 lowercase letter, and 1 number.
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8}$/;
+
+    if (!passwordRegex.test(value)) {
+        showError(
+            passwordError,
+            'Password must be exactly 8 characters with uppercase, lowercase and a number.'
+        );
+        passwordInput.style.borderColor = '#ef4444';
+        return false;
+    }
+
+    hideError(passwordError);
+    passwordInput.style.borderColor = 'transparent';
+    return true;
+}
+
+function validateConfirmPassword() {
+    const value = confirmPasswordInput.value;
+    if (!value) {
+        showError(confirmPasswordError, 'Please confirm your password.');
+        confirmPasswordInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8}$/;
+
+    if (!passwordRegex.test(value)) {
+        showError(
+            confirmPasswordError,
+            'Confirm Password must be exactly 8 characters with uppercase, lowercase and a number.'
+        );
+        confirmPasswordInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    if (value !== passwordInput.value) {
+        showError(confirmPasswordError, 'Passwords do not match.');
+        confirmPasswordInput.style.borderColor = '#ef4444';
+        return false;
+    }
+    hideError(confirmPasswordError);
+    confirmPasswordInput.style.borderColor = 'transparent';
+    return true;
+}
+
+function validateTerms() {
+    if (!termsInput.checked) {
+        showError(termsError, 'You must agree to the Terms and Privacy Policy.');
+        return false;
+    }
+    hideError(termsError);
+    return true;
+}
+
+// Real-time validation
+nameInput.addEventListener('blur', validateName);
+nameInput.addEventListener('input', () => {
+    if (nameError.textContent) validateName();
+});
+
+emailInput.addEventListener('blur', validateEmail);
+emailInput.addEventListener('input', () => {
+    if (emailError.textContent) validateEmail();
+});
+
+passwordInput.addEventListener('blur', validatePassword);
+passwordInput.addEventListener('input', () => {
+    if (passwordInput.value.length > 8) passwordInput.value = passwordInput.value.slice(0, 8);
+    if (passwordError.textContent) validatePassword();
+    if (confirmPasswordInput.value) validateConfirmPassword();
+});
+
+confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+confirmPasswordInput.addEventListener('input', () => {
+    if (confirmPasswordInput.value.length > 8) confirmPasswordInput.value = confirmPasswordInput.value.slice(0, 8);
+    if (confirmPasswordError.textContent) validateConfirmPassword();
+});
+
+// Password eye icons
+function setupPasswordToggle(buttonId, inputId) {
+    const button = document.getElementById(buttonId);
+    const input = document.getElementById(inputId);
+    if (!button || !input) return;
+
+    button.addEventListener('click', () => {
+        const icon = button.querySelector('i');
+        const showing = input.type === 'text';
+        input.type = showing ? 'password' : 'text';
+        icon.classList.toggle('fa-eye', showing);
+        icon.classList.toggle('fa-eye-slash', !showing);
+        button.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    });
+}
+
+setupPasswordToggle('togglePassword', 'password');
+setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+
+termsInput.addEventListener('change', () => {
+    if (termsError.textContent) validateTerms();
+});
+
+// Form submission
+signupForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const isNameValid = validateName();
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+    const isConfirmPasswordValid = validateConfirmPassword();
+    const isTermsValid = validateTerms();
+
+    if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && isTermsValid) {
+        // Show success overlay
+        successOverlay.classList.remove('hidden');
+        successOverlay.classList.add('flex');
+
+        // Redirect after 1.5 seconds
+        setTimeout(() => {
+            window.location.href = '404.html';
+        }, 1500);
+    }
+});
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>

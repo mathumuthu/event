@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us - Stackly</title>
+<meta name="description" content="Get in touch with Stackly. We're here to help you create amazing event experiences.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+                script: ['Dancing Script','cursive'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.hero-bg {
+    background: linear-gradient(180deg, rgba(11,11,26,0.3) 0%, rgba(11,11,26,0.6) 50%, rgba(11,11,26,0.95) 100%),
+                url('img1.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.nav-link { position: relative; }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: #E91E63; border-radius: 2px; transition: width 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.btn-primary {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(233,30,99,0.35);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #E91E63;
+    box-shadow: 0 0 0 3px rgba(233,30,99,0.1);
+}
+
+/* FAQ Accordion */
+.faq-item { transition: all 0.3s ease; cursor: pointer; }
+.faq-item.active { background: #E91E63; color: white; border-color: #E91E63; }
+.faq-item.active .faq-icon { color: white; transform: rotate(45deg); }
+.faq-item.active .faq-answer { max-height: 300px; opacity: 1; padding-top: 12px; }
+.faq-answer { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; }
+.faq-icon { transition: transform 0.3s ease; }
+
+.vinyl { animation: spin 25s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Mobile menu fix */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: block;
+}
+.mobile-menu.open {
+    max-height: 600px;
+    opacity: 1;
+}
+@media (min-width: 1024px) {
+    .mobile-menu { display: none !important; }
+}
+
+/* No horizontal scroll */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+input:focus, select:focus, textarea:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header id="navbar" class="sticky top-0 z-50 transition-all duration-300 bg-dark/95 backdrop-blur-xl shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Home</a>
+                <a href="event.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Events</a>
+                <a href="cat.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Categories</a>
+                <a href="about.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">About Us</a>
+                <a href="blog.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="nav-link active text-primary text-sm font-semibold">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+            </div>
+
+            <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu lg:hidden bg-dark-card/98 backdrop-blur-xl border-t border-white/10">
+        <div class="px-6 py-6 space-y-1">
+            <a href="index.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Home</a>
+            <a href="event.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Events</a>
+            <a href="cat.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Categories</a>
+            <a href="about.html" class="block text-white/80 font-medium py-3 border-b border-white/5">About Us</a>
+            <a href="blog.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Blog</a>
+            <a href="contact.html" class="block text-primary font-semibold py-3 border-b border-white/5">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="login.html" class="text-white font-medium py-2">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary text-white px-6 py-3 rounded-full text-center font-semibold">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero-bg pt-28 pb-20 relative">
+    <div class="max-w-4xl mx-auto px-4 text-center pt-10 pb-2" data-aos="fade-up">
+        <p class="font-script text-primary text-3xl md:text-4xl mb-2">Get In Touch</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            We're Here to <span class="text-primary">Help</span> You
+        </h1>
+        <div class="w-12 h-1 bg-primary mx-auto mb-5 rounded-full"></div>
+        <p class="text-white/70 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+            Have questions or need assistance? Our team is ready to<br>help you create amazing event experiences.
+        </p>
+    </div>
+</section>
+
+<!-- ========== CONTACT SECTION ========== -->
+<section class="py-16 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row gap-10">
+
+            <!-- LEFT: Contact Form -->
+            <div class="flex-1" data-aos="fade-right">
+                <h2 class="text-2xl font-bold text-dark mb-1">Send us a Message</h2>
+                <p class="text-gray-400 text-sm mb-8">Fill out the form below and we'll get back to you soon.</p>
+
+                <form id="contactForm" class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-dark mb-2">Full Name</label>
+                            <input type="text" id="contactName" placeholder="Enter your name" pattern="[A-Za-z ]+" title="Name should contain letters only" required class="form-input w-full px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-gray-200 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-dark mb-2">Email Address</label>
+                            <input type="email" id="contactEmail" placeholder="Enter your email" required class="form-input w-full px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-gray-200 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-dark mb-2">Phone Number</label>
+                        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+                            <select class="px-3 py-3 bg-gray-50 rounded-xl sm:rounded-r-none sm:rounded-l-xl text-sm text-gray-700 border border-gray-200 sm:border-r-0 focus:border-primary transition-all appearance-none cursor-pointer">
+                                <option>🇮🇳 +91</option>
+                                <option>🇺🇸 +1</option>
+                                <option>🇬🇧 +44</option>
+                            </select>
+                            <input type="tel" id="contactPhone" placeholder="Enter your phone number" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" title="Phone number must contain exactly 10 digits" class="form-input flex-1 px-4 py-3 bg-gray-50 rounded-xl sm:rounded-l-none sm:rounded-r-xl text-sm text-gray-800 placeholder-gray-400 border border-gray-200 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-dark mb-2">Subject</label>
+                        <input type="text" id="contactSubject" placeholder="How can we help you?" required class="form-input w-full px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-gray-200 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-dark mb-2">Message</label>
+                        <textarea id="contactMessage" rows="5" placeholder="Tell us more about your query..." required class="form-input w-full px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-800 placeholder-gray-400 border border-gray-200 transition-all resize-none"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-full font-semibold text-sm inline-flex items-center gap-2">
+                            Send Message <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                        <div class="flex items-center gap-2 text-gray-400 text-xs">
+                            <i class="fas fa-lock text-[10px]"></i>
+                            <span>Your information is secure and will not be shared.</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- RIGHT: Contact Info -->
+            <div class="w-full lg:w-80 flex-shrink-0 space-y-4" data-aos="fade-left">
+                <h3 class="text-lg font-bold text-dark mb-1">Contact Information</h3>
+                <p class="text-gray-400 text-sm mb-5">Choose the best way to reach us.</p>
+
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0">
+                            <i class="far fa-envelope text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-dark text-sm mb-0.5">Email Us</h4>
+                            <a href="mailto:support@stackly.com" class="text-primary text-sm font-medium hover:underline">support@stackly.com</a>
+                            <p class="text-gray-400 text-xs mt-0.5">We'll reply within 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone-alt text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-dark text-sm mb-0.5">Call Us</h4>
+                            <a href="tel:+919876543210" class="text-primary text-sm font-medium hover:underline">+91 98765 43210</a>
+                            <p class="text-gray-400 text-xs mt-0.5">Mon - Sat, 9:00 AM - 7:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-dark text-sm mb-0.5">Visit Us</h4>
+                            <p class="text-gray-600 text-xs leading-relaxed">Evently HQ, 5th Floor, Tech Park,<br>Bangalore, Karnataka 560103</p>
+                            <p class="text-gray-400 text-xs mt-1">Mon - Fri, 10:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0">
+                            <i class="far fa-comment-dots text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-dark text-sm mb-0.5">Live Chat</h4>
+                            <p class="text-gray-600 text-xs">Chat with our support team</p>
+                            <a href="404.html" class="text-primary text-xs font-semibold hover:underline mt-0.5 inline-block">Available on website</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-dark rounded-2xl p-6 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-base mb-1">Event Organizer?</h4>
+                        <p class="text-white/60 text-xs mb-4">Partner with us and grow your audience.</p>
+                        <a href="404.html" class="btn-primary inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-full text-xs font-semibold">
+                            Become a Partner <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 text-white/5 text-7xl">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FAQ SECTION ========== -->
+<section class="py-20 bg-gray-50/40 relative overflow-hidden">
+    <div class="absolute -left-20 top-1/2 -translate-y-1/2 w-48 h-48 opacity-[0.06] hidden lg:block">
+        <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=300&q=80" alt="" class="w-full h-full object-cover rounded-full vinyl">
+    </div>
+    <div class="absolute -right-20 top-1/2 -translate-y-1/2 w-48 h-48 opacity-[0.06] hidden lg:block">
+        <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=300&q=80" alt="" class="w-full h-full object-cover rounded-full vinyl" style="animation-direction:reverse;">
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-dark mb-3">Frequently Ask Question</h2>
+            <p class="text-gray-500 text-sm max-w-md mx-auto leading-relaxed">
+                We use only the best quality materials on the market in order to provide the best products to our patients.
+            </p>
+        </div>
+
+        <div class="space-y-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="faq-item active rounded-2xl p-5 border border-primary cursor-pointer" onclick="toggleFaq(this)">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                        <h4 class="font-semibold text-sm">Can I see who reads my email campaigns?</h4>
+                    </div>
+                    <i class="fas fa-plus faq-icon text-white text-sm"></i>
+                </div>
+                <div class="faq-answer text-white/90 text-sm leading-relaxed pl-5">
+                    Lorem ipsum dolor sit amet consectetur. Convallis cras placerat dignissim aliquam massa. Aliquet volutpat rhoncus in convallis consectetur. Cras adipiscing volutpat non hac enim odio enim.
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl p-5 border border-gray-100 cursor-pointer" onclick="toggleFaq(this)">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span>
+                        <h4 class="font-semibold text-dark text-sm">Do you offer non-profit discounts?</h4>
+                    </div>
+                    <i class="fas fa-plus faq-icon text-primary text-sm"></i>
+                </div>
+                <div class="faq-answer text-gray-500 text-sm leading-relaxed pl-5">
+                    Yes, we offer special discounts for registered non-profit organizations. Please contact our support team with your organization details to avail the discount.
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl p-5 border border-gray-100 cursor-pointer" onclick="toggleFaq(this)">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span>
+                        <h4 class="font-semibold text-dark text-sm">Can I see who reads my email campaigns?</h4>
+                    </div>
+                    <i class="fas fa-plus faq-icon text-primary text-sm"></i>
+                </div>
+                <div class="faq-answer text-gray-500 text-sm leading-relaxed pl-5">
+                    Yes, our analytics dashboard provides detailed insights into who opens and reads your email campaigns, including open rates, click-through rates, and engagement metrics.
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl p-5 border border-gray-100 cursor-pointer" onclick="toggleFaq(this)">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span>
+                        <h4 class="font-semibold text-dark text-sm">Can I see who reads my email campaigns?</h4>
+                    </div>
+                    <i class="fas fa-plus faq-icon text-primary text-sm"></i>
+                </div>
+                <div class="faq-answer text-gray-500 text-sm leading-relaxed pl-5">
+                    Our platform offers comprehensive tracking features that allow you to monitor recipient engagement with your email campaigns in real-time.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-14 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left" data-aos="fade-right">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Stay Updated with Stackly</h2>
+                <p class="text-white/70 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form id="newsForm" class="w-full max-w-md" data-aos="fade-left">
+                <div class="flex gap-2 bg-white rounded-full p-1.5">
+                    <input type="email" id="newsEmail" placeholder="Enter your email" required class="flex-1 px-4 py-2.5 rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+                <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/50 text-sm leading-relaxed mb-6">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-3">
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/50 text-sm mb-4 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form id="footerForm" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="footerEmail" placeholder="Enter your email address..." required
+                           class="flex-1 min-w-0 px-4 py-2.5 bg-white/10 rounded-lg text-sm text-white placeholder-white/40 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap shrink-0 transition-all">
+                        Subscribe Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/30 text-xs">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 700, once: true, offset: 60, easing: 'ease-out-cubic' });
+
+const navbar = document.getElementById('navbar');
+if (navbar) {
+    navbar.classList.add('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+}
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        menuBtn.innerHTML = menuOpen ? '<i class="fas fa-times text-lg"></i>' : '<i class="fas fa-bars text-lg"></i>';
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            menuBtn.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// FAQ Toggle
+function toggleFaq(item) {
+    const allFaqs = document.querySelectorAll('.faq-item');
+    allFaqs.forEach(faq => {
+        if (faq !== item) {
+            faq.classList.remove('active');
+            faq.classList.remove('bg-primary', 'text-white', 'border-primary');
+            faq.classList.add('bg-white', 'border-gray-100');
+            const icon = faq.querySelector('.faq-icon');
+            if (icon) { icon.classList.remove('text-white'); icon.classList.add('text-primary'); }
+            const dot = faq.querySelector('span');
+            if (dot) { dot.classList.remove('bg-white'); dot.classList.add('bg-primary'); }
+            const title = faq.querySelector('h4');
+            if (title) { title.classList.remove('text-white'); title.classList.add('text-dark'); }
+        }
+    });
+
+    const isActive = item.classList.contains('active');
+    if (!isActive) {
+        item.classList.add('active');
+        item.classList.remove('bg-white', 'border-gray-100');
+        item.classList.add('bg-primary', 'text-white', 'border-primary');
+        const icon = item.querySelector('.faq-icon');
+        if (icon) { icon.classList.remove('text-primary'); icon.classList.add('text-white'); }
+        const dot = item.querySelector('span');
+        if (dot) { dot.classList.remove('bg-primary'); dot.classList.add('bg-white'); }
+        const title = item.querySelector('h4');
+        if (title) { title.classList.remove('text-dark'); title.classList.add('text-white'); }
+    } else {
+        item.classList.remove('active');
+        item.classList.remove('bg-primary', 'text-white', 'border-primary');
+        item.classList.add('bg-white', 'border-gray-100');
+        const icon = item.querySelector('.faq-icon');
+        if (icon) { icon.classList.remove('text-white'); icon.classList.add('text-primary'); }
+        const dot = item.querySelector('span');
+        if (dot) { dot.classList.remove('bg-white'); dot.classList.add('bg-primary'); }
+        const title = item.querySelector('h4');
+        if (title) { title.classList.remove('text-white'); title.classList.add('text-dark'); }
+    }
+}
+
+// Clear all forms on page load / back navigation from 404
+window.addEventListener('load', () => {
+    document.querySelectorAll('form').forEach(f => f.reset());
+});
+window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+        document.querySelectorAll('form').forEach(f => f.reset());
+    }
+});
+
+// Input restrictions: numbers in phone, letters in name
+const contactNameInput = document.getElementById('contactName');
+const contactPhoneInput = document.getElementById('contactPhone');
+
+if (contactNameInput) {
+    contactNameInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^A-Za-z ]/g, '');
+    });
+}
+
+if (contactPhoneInput) {
+    contactPhoneInput.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+    });
+}
+
+// Contact form validation
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('contactName');
+        const phoneInput = document.getElementById('contactPhone');
+        const name = nameInput.value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const phone = phoneInput.value.trim();
+        const subject = document.getElementById('contactSubject').value.trim();
+        const message = document.getElementById('contactMessage').value.trim();
+
+        if (!name || !email || !subject || !message) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        const nameRe = /^[A-Za-z ]+$/;
+        if (!nameRe.test(name)) {
+            alert('Name should contain letters only.');
+            nameInput.focus();
+            return;
+        }
+
+        if (phone && !/^[0-9]{10}$/.test(phone)) {
+            alert('Phone number must contain exactly 10 digits.');
+            phoneInput.focus();
+            return;
+        }
+
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your message has been sent successfully.');
+        contactForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Newsletter form validation
+const newsForm = document.getElementById('newsForm');
+const newsEmail = document.getElementById('newsEmail');
+if (newsForm && newsEmail) {
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = newsEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        newsForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Footer form validation
+const footerForm = document.getElementById('footerForm');
+const footerEmail = document.getElementById('footerEmail');
+if (footerForm && footerEmail) {
+    footerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = footerEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        footerForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Password validation helper: minimum 8 characters.
+// Use validatePassword(value) on login/signup password fields.
+function validatePassword(value) {
+    if (value.length < 8) {
+        alert('Password must be at least 8 characters.');
+        return false;
+    }
+    return true;
+}
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>

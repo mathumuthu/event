@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Dashboard - Stackly</title>
+<meta name="description" content="Stackly User Dashboard - Discover and manage your events.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+                'dark-surface': '#1A1A2E',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #0B0B1A; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.sidebar-link { transition: all 0.2s ease; }
+.sidebar-link:hover, .sidebar-link.active {
+    background: rgba(233,30,99,0.15);
+    color: #E91E63;
+    border-right: 3px solid #E91E63;
+}
+
+.stat-card { transition: all 0.3s ease; }
+.stat-card:hover { transform: translateY(-4px); }
+
+.event-card { transition: all 0.3s ease; }
+.event-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.2); }
+
+.heart-btn { transition: all 0.25s ease; }
+.heart-btn:hover { transform: scale(1.1); }
+.heart-btn.liked { color: #E91E63; }
+.heart-btn.liked i { font-weight: 900; }
+
+.btn-primary { transition: all 0.3s ease; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(233,30,99,0.3); }
+
+input:focus, select:focus { outline: none; }
+
+.mobile-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+.mobile-sidebar.open { transform: translateX(0); }
+
+.sidebar-overlay {
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-300 bg-dark min-h-screen">
+
+<!-- Mobile Overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 bg-black/60 z-40 lg:hidden" onclick="toggleSidebar()"></div>
+
+<!-- DESKTOP: flex row layout | MOBILE: sidebar overlays -->
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="mobile-sidebar fixed lg:static top-0 left-0 h-full w-64 bg-dark-card border-r border-white/5 z-50 flex flex-col flex-shrink-0 lg:transform-none">
+        <!-- Logo -->
+        <div class="p-6 border-b border-white/5">
+             <a href="404.html" class="flex items-center gap-2.5">
+                <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-12 h-12 object-contain">
+                <span class="text-xl font-bold text-white tracking-tight">STACKLY</span>
+            </a>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+            <a href="404.html" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium">
+                <i class="fas fa-th-large w-5 text-center"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-calendar-alt w-5 text-center"></i>
+                <span>My Events</span>
+                <span class="ml-auto bg-primary/20 text-primary text-xs font-bold px-2 py-0.5 rounded-full">5</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-ticket-alt w-5 text-center"></i>
+                <span>My Tickets</span>
+                <span class="ml-auto bg-primary/20 text-primary text-xs font-bold px-2 py-0.5 rounded-full">12</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-heart w-5 text-center"></i>
+                <span>Favorites</span>
+                <span class="ml-auto bg-primary/20 text-primary text-xs font-bold px-2 py-0.5 rounded-full">8</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-wallet w-5 text-center"></i>
+                <span>Payments</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-bell w-5 text-center"></i>
+                <span>Notifications</span>
+                <span class="ml-auto bg-primary text-white text-xs font-bold px-2 py-0.5 rounded-full w-5 h-5 flex items-center justify-center">3</span>
+            </a>
+            <a href="404.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-cog w-5 text-center"></i>
+                <span>Settings</span>
+            </a>
+              <a href="login.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400">
+                <i class="fas fa-log w-5 text-center"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="p-4 border-t border-white/5">
+            <div class="flex items-center gap-3">
+                <img src="reddy.webp" alt="User" class="w-10 h-10 rounded-full object-cover border-2 border-primary/30">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-white truncate">Priya Sharma</p>
+                    <p class="text-xs text-gray-500">priya@email.com</p>
+                </div>
+                <a href="404.html" class="text-gray-500 hover:text-red-400 transition-colors" title="Logout">
+                    <i class="fas fa-sign-out-alt text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+
+        <!-- Top Header -->
+        <header class="sticky top-0 z-30 bg-dark/95 backdrop-blur-xl border-b border-white/5 px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden text-white/70 hover:text-white p-2" aria-label="Menu">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">My Dashboard</h1>
+                        <p class="text-xs text-gray-500">Welcome back, Priya</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center bg-dark-surface rounded-full px-4 py-2 border border-white/5">
+                        <i class="fas fa-search text-gray-500 text-xs mr-2"></i>
+                        <input type="text" placeholder="Search events..." class="bg-transparent text-sm text-white placeholder-gray-500 border-0 focus:ring-0 p-0 w-40">
+                    </div>
+                  <a href="404.html">  <button class="relative w-10 h-10 rounded-full bg-dark-surface flex items-center justify-center text-gray-400 hover:text-white transition-colors" aria-label="Notifications">
+                        <i class="fas fa-bell text-sm"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+                    </button></a>
+                    <img src="asha.webp" alt="User" class="w-10 h-10 rounded-full object-cover border-2 border-primary/30 hidden sm:block">
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+                <div class="stat-card bg-dark-card rounded-2xl p-5 border border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                            <i class="fas fa-ticket-alt text-primary text-sm"></i>
+                        </div>
+                        <span class="text-xs text-green-400 font-medium flex items-center gap-1">
+                            <i class="fas fa-arrow-up text-[10px]"></i> 3
+                        </span>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-0.5">12</p>
+                    <p class="text-xs text-gray-500">My Tickets</p>
+                </div>
+                <div class="stat-card bg-dark-card rounded-2xl p-5 border border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-primary text-sm"></i>
+                        </div>
+                        <span class="text-xs text-green-400 font-medium flex items-center gap-1">
+                            <i class="fas fa-arrow-up text-[10px]"></i> 2
+                        </span>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-0.5">5</p>
+                    <p class="text-xs text-gray-500">Upcoming Events</p>
+                </div>
+                <div class="stat-card bg-dark-card rounded-2xl p-5 border border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                            <i class="fas fa-heart text-primary text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-400 font-medium">Saved</span>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-0.5">8</p>
+                    <p class="text-xs text-gray-500">Favorites</p>
+                </div>
+                <div class="stat-card bg-dark-card rounded-2xl p-5 border border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                            <i class="fas fa-rupee-sign text-primary text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-400 font-medium">Total</span>
+                    </div>
+                    <p class="text-2xl font-bold text-white mb-0.5">Rs24,500</p>
+                    <p class="text-xs text-gray-500">Spent</p>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="font-bold text-white text-sm">Upcoming Events</h3>
+                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">View All</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Event Card 1 -->
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img1 (1).webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">28</span>
+                                <span class="block text-[10px] text-white/80 uppercase">May</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white" aria-label="Favorite">
+                                <i class="far fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded">Music</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Arijit Singh Live Concert</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Chennai, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs999</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">View Ticket</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Card 2 -->
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img2.webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">04</span>
+                                <span class="block text-[10px] text-white/80 uppercase">Jun</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white" aria-label="Favorite">
+                                <i class="far fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider bg-blue-400/10 px-2 py-0.5 rounded">Festival</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Sunburn Music Festival</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Bangalore, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs1,499</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">View Ticket</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Card 3 -->
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img4.webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">11</span>
+                                <span class="block text-[10px] text-white/80 uppercase">Jun</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white liked" aria-label="Favorite">
+                                <i class="fas fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-yellow-400 uppercase tracking-wider bg-yellow-400/10 px-2 py-0.5 rounded">Comedy</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Standup Comedy Show</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Hyderabad, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs499</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">View Ticket</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Events -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="font-bold text-white text-sm">Recommended For You</h3>
+                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">Explore All</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img5 (4).webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">18</span>
+                                <span class="block text-[10px] text-white/80 uppercase">Jun</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white" aria-label="Favorite">
+                                <i class="far fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-green-400 uppercase tracking-wider bg-green-400/10 px-2 py-0.5 rounded">Sports</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Pro Kabaddi League</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Mumbai, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs499</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img10.webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">25</span>
+                                <span class="block text-[10px] text-white/80 uppercase">Jun</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white" aria-label="Favorite">
+                                <i class="far fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wider bg-purple-400/10 px-2 py-0.5 rounded">Workshop</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Photography Workshop</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Pune, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs999</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-dark-card rounded-2xl overflow-hidden border border-white/5">
+                        <div class="relative h-40 overflow-hidden">
+                            <img src="img11 (1).webp" alt="" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-primary/90 rounded-lg px-2 py-1 text-center">
+                                <span class="block text-sm font-bold text-white leading-none">02</span>
+                                <span class="block text-[10px] text-white/80 uppercase">Jul</span>
+                            </div>
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-dark/50 backdrop-blur rounded-full flex items-center justify-center text-white liked" aria-label="Favorite">
+                                <i class="fas fa-heart text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded">Party</span>
+                            <h4 class="font-bold text-white text-sm mt-2 mb-1">Club Night Party</h4>
+                            <div class="flex items-center gap-1 text-gray-500 text-xs mb-2">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Goa, India</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-primary font-bold text-sm">Rs1,299</span>
+                                <a href="404.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-1.5 rounded-full text-xs font-semibold">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <div class="bg-dark-card rounded-2xl border border-white/5 overflow-hidden">
+                <div class="p-5 border-b border-white/5 flex items-center justify-between">
+                    <h3 class="font-bold text-white text-sm">Recent Bookings</h3>
+                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">View All</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[600px]">
+                        <thead>
+                            <tr class="border-b border-white/5">
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Event</th>
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Date</th>
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Tickets</th>
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Amount</th>
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Status</th>
+                                <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="img1 (1).webp" alt="" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Arijit Singh Live</p>
+                                            <p class="text-xs text-gray-500">Chennai</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-gray-400">28 May 2024</td>
+                                <td class="px-5 py-4 text-sm text-white">2</td>
+                                <td class="px-5 py-4 text-sm text-white font-medium">Rs1,998</td>
+                                <td class="px-5 py-4"><span class="text-xs bg-green-500/15 text-green-400 px-2.5 py-1 rounded-full font-medium">Confirmed</span></td>
+                                <td class="px-5 py-4">
+                                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">Download</a>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=100&q=80" alt="" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Sunburn Festival</p>
+                                            <p class="text-xs text-gray-500">Bangalore</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-gray-400">04 Jun 2024</td>
+                                <td class="px-5 py-4 text-sm text-white">4</td>
+                                <td class="px-5 py-4 text-sm text-white font-medium">Rs5,996</td>
+                                <td class="px-5 py-4"><span class="text-xs bg-green-500/15 text-green-400 px-2.5 py-1 rounded-full font-medium">Confirmed</span></td>
+                                <td class="px-5 py-4">
+                                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">Download</a>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="img5 (4).webp" alt="" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Comedy Show</p>
+                                            <p class="text-xs text-gray-500">Hyderabad</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-gray-400">11 Jun 2024</td>
+                                <td class="px-5 py-4 text-sm text-white">2</td>
+                                <td class="px-5 py-4 text-sm text-white font-medium">Rs998</td>
+                                <td class="px-5 py-4"><span class="text-xs bg-yellow-500/15 text-yellow-400 px-2.5 py-1 rounded-full font-medium">Pending</span></td>
+                                <td class="px-5 py-4">
+                                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">View</a>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-5 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <img src="img11 (1).webp" alt="" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Kabaddi League</p>
+                                            <p class="text-xs text-gray-500">Mumbai</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-gray-400">18 Jun 2024</td>
+                                <td class="px-5 py-4 text-sm text-white">3</td>
+                                <td class="px-5 py-4 text-sm text-white font-medium">Rs1,497</td>
+                                <td class="px-5 py-4"><span class="text-xs bg-green-500/15 text-green-400 px-2.5 py-1 rounded-full font-medium">Confirmed</span></td>
+                                <td class="px-5 py-4">
+                                    <a href="404.html" class="text-primary text-xs font-medium hover:underline">Download</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+}
+
+// Heart toggle
+document.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        const icon = this.querySelector('i');
+        this.classList.toggle('liked');
+        icon.classList.toggle('far'); icon.classList.toggle('fas');
+    });
+});
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events - Stackly</title>
+<meta name="description" content="Discover amazing events near you on Stackly.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.hero-bg {
+    background: linear-gradient(180deg, rgba(11,11,26,0.3) 0%, rgba(11,11,26,0.6) 50%, rgba(11,11,26,0.95) 100%),
+                url('img1 (1).webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.nav-link { position: relative; }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: #E91E63; border-radius: 2px; transition: width 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.event-card { transition: all 0.3s ease; }
+.event-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+
+.heart-btn { transition: all 0.25s ease; }
+.heart-btn:hover { transform: scale(1.1); }
+.heart-btn.liked { color: #E91E63; }
+.heart-btn.liked i { font-weight: 900; }
+
+.cat-tab { transition: all 0.2s ease; white-space: nowrap; cursor: pointer; }
+.cat-tab.active { border-color: #E91E63; color: #E91E63; }
+.cat-tab:hover:not(.active) { border-color: #E91E63; color: #E91E63; }
+
+.btn-primary {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(233,30,99,0.3);
+}
+
+.search-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233,30,99,0.12);
+}
+
+/* Mobile menu fix */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: block;
+}
+.mobile-menu.open {
+    max-height: 600px;
+    opacity: 1;
+}
+@media (min-width: 1024px) {
+    .mobile-menu { display: none !important; }
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* No horizontal scroll */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+/* Custom radio style for date filters */
+.radio-label {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.radio-label input[type="radio"] {
+    appearance: none; width: 16px; height: 16px; border: 2px solid #d1d5db;
+    border-radius: 50%; position: relative; cursor: pointer; flex-shrink: 0;
+}
+.radio-label input[type="radio"]:checked {
+    border-color: #E91E63;
+}
+.radio-label input[type="radio"]:checked::after {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 8px; height: 8px; background: #E91E63; border-radius: 50%;
+}
+
+/* Custom checkbox */
+.chk-label {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.chk-label input[type="checkbox"] {
+    appearance: none; width: 16px; height: 16px; border: 2px solid #d1d5db;
+    border-radius: 4px; position: relative; cursor: pointer; flex-shrink: 0;
+}
+.chk-label input[type="checkbox"]:checked {
+    background: #E91E63; border-color: #E91E63;
+}
+.chk-label input[type="checkbox"]:checked::after {
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    color: white; font-size: 9px;
+}
+
+/* Range slider */
+.range-slider { position: relative; height: 4px; background: #e5e7eb; border-radius: 2px; cursor: pointer; }
+.range-slider .range-fill { position: absolute; left: 0; right: 30%; height: 100%; background: #E91E63; border-radius: 2px; pointer-events: none; }
+.range-thumb { position: absolute; width: 16px; height: 16px; background: white; border: 3px solid #E91E63; border-radius: 50%; top: 50%; transform: translate(-50%,-50%); cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 2; }
+
+.pagination-btn {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 13px; font-weight: 600; transition: all 0.2s;
+}
+.pagination-btn.active { background: #E91E63; color: white; }
+.pagination-btn:not(.active):hover { background: #f3f4f6; }
+
+input:focus, select:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Home</a>
+                <a href="event.html" class="nav-link active text-primary text-sm font-semibold">Events</a>
+                <a href="cat.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Categories</a>
+                <a href="about.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">About Us</a>
+                <a href="blog.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Blog</a>
+                <a href="contact.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+            </div>
+
+            <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu lg:hidden bg-dark-card/98 backdrop-blur-xl border-t border-white/10">
+        <div class="px-6 py-6 space-y-1">
+            <a href="index.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Home</a>
+            <a href="event.html" class="block text-primary font-semibold py-3 border-b border-white/5">Events</a>
+            <a href="cat.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Categories</a>
+            <a href="about.html" class="block text-white/80 font-medium py-3 border-b border-white/5">About Us</a>
+            <a href="blog.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Blog</a>
+            <a href="contact.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="login.html" class="text-white font-medium py-2">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary text-white px-6 py-3 rounded-full text-center font-semibold">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero-bg pt-24 pb-36 relative">
+    <div class="max-w-4xl mx-auto px-4 text-center pt-12 pb-4" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            Discover Amazing <span class="text-primary">Events</span><br>Near you
+        </h1>
+        <p class="text-white/70 text-base md:text-lg max-w-lg mx-auto">
+            Find concerts, festivals, workshops, sports and<br>more exciting events.
+        </p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="absolute bottom-0 left-0 right-0 transform translate-y-1/2 z-10 px-4">
+        <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+            <form id="eventSearchForm" class="bg-white rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row items-center gap-1">
+                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-b sm:border-b-0 sm:border-r border-gray-100 w-full">
+                    <i class="fas fa-search text-gray-400 text-sm"></i>
+                    <input type="text" id="eventSearchInput" name="eventSearch" placeholder="Search for events, artists, etc" required class="w-full text-sm text-gray-700 placeholder-gray-400 bg-transparent border-0 focus:ring-0 p-0">
+                </div>
+                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-b sm:border-b-0 sm:border-r border-gray-100 w-full">
+                    <i class="fas fa-map-marker-alt text-gray-400 text-sm"></i>
+                    <input type="text" id="eventLocationInput" name="eventLocation" placeholder="Select Location" required class="w-full text-sm text-gray-700 placeholder-gray-400 bg-transparent border-0 focus:ring-0 p-0">
+                </div>
+                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 border-b sm:border-b-0 sm:border-r border-gray-100 w-full">
+                    <i class="fas fa-calendar text-gray-400 text-sm"></i>
+                    <input type="text" id="eventDateInput" name="eventDate" placeholder="Select Date" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" required class="w-full text-sm text-gray-700 placeholder-gray-400 bg-transparent border-0 focus:ring-0 p-0">
+                </div>
+                <div class="flex-1 flex items-center gap-3 px-4 py-2.5 w-full hidden sm:flex">
+                    <i class="fas fa-list text-gray-400 text-sm"></i>
+                    <select id="eventCategoryInput" name="eventCategory" required class="w-full text-sm text-gray-700 bg-transparent border-0 focus:ring-0 p-0 cursor-pointer appearance-none">
+                        <option value="">All Categories</option>
+                        <option>Music</option>
+                        <option>Sports</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-xl font-semibold text-sm whitespace-nowrap w-full sm:w-auto">Search</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Spacer -->
+<div class="h-10 md:h-8"></div>
+
+<!-- ========== CATEGORY TABS ========== -->
+<section class="pt-10 pb-6 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" data-aos="fade-up">
+        <a href="404.html">    <button type="button" class="cat-tab active flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-primary bg-primary-light/30 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-list text-lg"></i>
+                <span class="text-xs font-semibold">All Events</span>
+            </button></a>
+         <a href="404.html">   <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-music text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Music</span>
+            </button></a>
+       <a href="404.html">     <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-guitar text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Festival</span>
+            </button></a>
+        <a href="404.html">    <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-laugh-beam text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Comedy</span>
+            </button></a>
+        <a href="404.html">    <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-futbol text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Sports</span>
+            </button></a>
+       <a href="404.html">     <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-tools text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Workshop</span>
+            </button></a>
+        <a href="404.html">    <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-glass-cheers text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Party</span>
+            </button></a>
+        <a href="404.html">    <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-palette text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Art & Culture</span>
+            </button></a>
+      <a href="404.html">      <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[80px]" onclick="setCatTab(this)">
+                <i class="fas fa-utensils text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">Food & Drinks</span>
+            </button></a>
+       <a href="404.html">     <button type="button" class="cat-tab flex flex-col items-center gap-2 px-5 py-3 rounded-xl border-2 border-gray-100 min-w-[60px]" onclick="setCatTab(this)">
+                <i class="fas fa-ellipsis-h text-lg text-gray-500"></i>
+                <span class="text-xs font-semibold text-gray-600">More</span>
+            </button></a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== MAIN CONTENT ========== -->
+<section class="py-6 bg-gray-50/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- LEFT SIDEBAR FILTERS -->
+            <aside class="w-full lg:w-64 flex-shrink-0" data-aos="fade-right">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 lg:sticky lg:top-24">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-dark text-sm">Filters</h3>
+                        <button type="button" class="text-primary text-xs font-semibold hover:underline" onclick="resetFilters()">Reset</button>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleFilterSection(this)">
+                            <h4 class="font-semibold text-dark text-sm">Date</h4>
+                            <i class="fas fa-chevron-up text-gray-400 text-xs transition-transform"></i>
+                        </div>
+                        <div class="space-y-2.5 filter-section">
+                            <label class="radio-label">
+                                <input type="radio" name="date" checked>
+                                <span class="text-sm text-gray-700">Any Date</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="date">
+                                <span class="text-sm text-gray-700">Today</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="date">
+                                <span class="text-sm text-gray-700">This Weekend</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="date">
+                                <span class="text-sm text-gray-700">This Month</span>
+                            </label>
+                            <div class="relative mt-2">
+                                <input type="text" placeholder="Custom Range" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" class="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-700 placeholder-gray-400 border border-gray-200 focus:border-primary transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleFilterSection(this)">
+                            <h4 class="font-semibold text-dark text-sm">Location</h4>
+                            <i class="fas fa-chevron-up text-gray-400 text-xs transition-transform"></i>
+                        </div>
+                        <div class="filter-section">
+                            <div class="relative mb-3">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                <input type="text" placeholder="Enter location" class="w-full pl-8 pr-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-700 placeholder-gray-400 border border-gray-200 focus:border-primary transition-all">
+                            </div>
+                            <div class="space-y-2.5">
+                                <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Chennai</span></label>
+                                <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Bangalore</span></label>
+                                <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Hyderabad</span></label>
+                                <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Mumbai</span></label>
+                                <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Pune</span></label>
+                            </div>
+                           <a href="404.html" class="text-primary text-xs font-semibold mt-2 hover:underline">Show More</a>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleFilterSection(this)">
+                            <h4 class="font-semibold text-dark text-sm">Price Range</h4>
+                            <i class="fas fa-chevron-up text-gray-400 text-xs transition-transform"></i>
+                        </div>
+                        <div class="filter-section">
+                            <div class="range-slider mb-3" id="priceSlider">
+                                <div class="range-fill" id="rangeFill"></div>
+                                <div class="range-thumb" id="rangeThumb" style="left: 70%;"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>₹0</span>
+                                <span id="priceValue">₹7,000</span>
+                                <span>₹10,000+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Type -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleFilterSection(this)">
+                            <h4 class="font-semibold text-dark text-sm">Event Type</h4>
+                            <i class="fas fa-chevron-up text-gray-400 text-xs transition-transform"></i>
+                        </div>
+                        <div class="space-y-2.5 filter-section">
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Online Events</span></label>
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Offline Events</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleFilterSection(this)">
+                            <h4 class="font-semibold text-dark text-sm">Language</h4>
+                            <i class="fas fa-chevron-up text-gray-400 text-xs transition-transform"></i>
+                        </div>
+                        <div class="space-y-2.5 filter-section">
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">English</span></label>
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Hindi</span></label>
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Tamil</span></label>
+                            <label class="chk-label"><input type="checkbox"><span class="text-sm text-gray-600">Telugu</span></label>
+                        </div>
+                        <a href="404.html" class="text-primary text-xs font-semibold mt-2 hover:underline">Show More</a>
+                    </div>
+
+                    <button type="button" class="btn-primary block w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl font-semibold text-sm text-center" onclick="applyFilters()">Apply Filters</button>
+                </div>
+            </aside>
+
+            <!-- RIGHT EVENTS GRID -->
+            <div class="flex-1">
+                <!-- Header Bar -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3" data-aos="fade-up">
+                    <p class="text-sm text-gray-600">Showing <span class="font-bold text-dark">1-12</span> of <span class="font-bold text-dark">120</span> events</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-500">Sort by:</span>
+                        <select id="sortSelect" class="text-sm font-semibold text-dark bg-transparent border-0 cursor-pointer focus:ring-0" onchange="handleSort(this)">
+                            <option>Latest</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Popular</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Events Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img2.webp" alt="Arijit Singh" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">MUSIC</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Arijit Singh Live in Concert</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>28 May, 2024 • 7:00 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Chennai, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹999</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img3 (1).webp" alt="Sunburn" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">FESTIVAL</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Sunburn Music Festival 2024</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>04 Jun — 06 Jun, 2024</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Bangalore, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹1,499</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img4.webp" alt="Comedy" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">COMEDY</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Standup Comedy Live Show</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>11 Jun, 2024 • 8:00 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Hyderabad, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹499</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="150">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img1.webp" alt="Kabaddi" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">SPORTS</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Pro Kabaddi League</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>18 Jun, 2024 • 7:30 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Mumbai, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹499</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img9 (2).webp" alt="Photography" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">WORKSHOP</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Photography Workshop</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>25 Jun, 2024 • 10:00 AM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Pune, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹999</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="250">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img8 (2).webp" alt="Club Night" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">PARTY</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Club Night Party</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>02 Jul, 2024 • 9:00 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Goa, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹1,299</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Kabaddi" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">SPORTS</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Pro Kabaddi League</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>18 Jun, 2024 • 7:30 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Mumbai, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹499</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Photography" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">WORKSHOP</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Photography Workshop</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>25 Jun, 2024 • 10:00 AM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Pune, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹999</span>
+                        </div>
+                    </div>
+
+                    <div class="event-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-48 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Club Night" class="w-full h-full object-cover">
+                            <button class="heart-btn absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-400" aria-label="Favorite"><i class="far fa-heart text-xs"></i></button>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary-light/40 px-2 py-0.5 rounded">PARTY</span>
+                            <h3 class="font-bold text-dark text-sm mt-2 mb-1 leading-snug">Club Night Party</h3>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-1">
+                                <i class="far fa-calendar text-[10px]"></i>
+                                <span>02 Jul, 2024 • 9:00 PM</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-400 text-xs mb-3">
+                                <i class="fas fa-map-marker-alt text-[10px]"></i>
+                                <span>Goa, India</span>
+                            </div>
+                            <span class="text-primary font-bold text-sm">From ₹1,299</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-center gap-2 mt-10" data-aos="fade-up">
+                    <a href="404.html" class="pagination-btn text-gray-400 hover:text-dark"><i class="fas fa-chevron-left text-xs"></i></a>
+                    <a href="404.html" class="pagination-btn active">1</a>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">2</a>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">3</a>
+                    <span class="text-gray-400 text-sm px-1">...</span>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">10</a>
+                    <a href="404.html" class="pagination-btn text-gray-400 hover:text-dark"><i class="fas fa-chevron-right text-xs"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== TRUST BAR ========== -->
+<section class="bg-dark py-10 mt-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="flex items-start gap-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-shield-alt text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-0.5">Secure Booking</h4>
+                    <p class="text-white/50 text-xs leading-relaxed">100% secure payments and easy checkout</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-bolt text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-0.5">Instant Conformation</h4>
+                    <p class="text-white/50 text-xs leading-relaxed">Get instant Booking Conformation</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-headset text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-0.5">24/7 Support</h4>
+                    <p class="text-white/50 text-xs leading-relaxed">We are here to help you anytime</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-award text-primary text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-0.5">Trusted Platform</h4>
+                    <p class="text-white/50 text-xs leading-relaxed">Liked by Thousand of Event goers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-14 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left" data-aos="fade-right">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Stay Updated with Stackly</h2>
+                <p class="text-white/70 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form id="newsForm" class="w-full max-w-md" data-aos="fade-left">
+                <div class="flex gap-2 bg-white rounded-full p-1.5">
+                    <input type="email" id="newsEmail" placeholder="Enter your email" required class="flex-1 px-4 py-2.5 rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+                <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/50 text-sm leading-relaxed mb-6">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-3">
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/50 text-sm mb-4 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form id="footerForm" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="footerEmail" placeholder="Enter your email address..." required
+                           class="flex-1 min-w-0 px-4 py-2.5 bg-white/10 rounded-lg text-sm text-white placeholder-white/40 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap shrink-0 transition-all">
+                        Subscribe Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/30 text-xs">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 800, once: true, offset: 80, easing: 'ease-out-cubic' });
+
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+        navbar.classList.add('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    } else {
+        navbar.classList.remove('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+    }
+});
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        menuBtn.innerHTML = menuOpen ? '<i class="fas fa-times text-xl"></i>' : '<i class="fas fa-bars text-xl"></i>';
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            menuBtn.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Heart toggle
+document.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        const icon = this.querySelector('i');
+        this.classList.toggle('liked');
+        if (icon) { icon.classList.toggle('far'); icon.classList.toggle('fas'); }
+    });
+});
+
+// Category tabs
+function setCatTab(btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => {
+        t.classList.remove('active', 'border-primary', 'bg-primary-light/30');
+        t.classList.add('border-gray-100');
+        const icon = t.querySelector('i');
+        const span = t.querySelector('span');
+        if (icon) { icon.classList.remove('text-primary'); icon.classList.add('text-gray-500'); }
+        if (span) { span.classList.remove('text-primary'); span.classList.add('text-gray-600'); }
+    });
+    btn.classList.add('active', 'border-primary', 'bg-primary-light/30');
+    btn.classList.remove('border-gray-100');
+    const icon = btn.querySelector('i');
+    const span = btn.querySelector('span');
+    if (icon) { icon.classList.remove('text-gray-500'); }
+    if (span) { span.classList.remove('text-gray-600'); }
+}
+
+// Filter section toggle
+function toggleFilterSection(header) {
+    const section = header.nextElementSibling;
+    const icon = header.querySelector('i');
+    if (section.style.display === 'none') {
+        section.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+    } else {
+        section.style.display = 'none';
+        icon.style.transform = 'rotate(180deg)';
+    }
+}
+
+// Reset filters
+function resetFilters() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
+    document.querySelectorAll('input[type="text"]').forEach(t => t.value = '');
+    document.getElementById('rangeThumb').style.left = '70%';
+    document.getElementById('rangeFill').style.right = '30%';
+    document.getElementById('priceValue').textContent = '₹7,000';
+}
+
+// Apply filters
+function applyFilters() {
+    const filterPanel = document.querySelector('aside');
+    if (!filterPanel) return;
+
+    const requiredInputs = Array.from(filterPanel.querySelectorAll('input[type="text"], input[type="date"]'));
+    const locationInput = requiredInputs.find(input => input.placeholder === 'Enter location');
+    const customRangeInput = requiredInputs.find(input => input.placeholder === 'Custom Range');
+
+    // Check the filter controls that the user can fill/select.
+    const hasDateSelection = Array.from(filterPanel.querySelectorAll('input[name="date"]')).some(radio => radio.checked);
+    const hasLocationSelection =
+        (locationInput && locationInput.value.trim()) ||
+        Array.from(filterPanel.querySelectorAll('.chk-label input[type="checkbox"]')).slice(0, 5).some(cb => cb.checked);
+    const hasEventType = Array.from(filterPanel.querySelectorAll('.filter-section input[type="checkbox"]')).slice(5, 7).some(cb => cb.checked);
+    const hasLanguage = Array.from(filterPanel.querySelectorAll('.filter-section input[type="checkbox"]')).slice(7).some(cb => cb.checked);
+
+    // "Apply Filters" works only when every filter section has a value/selection.
+    const allFiltersFilled = hasDateSelection && hasLocationSelection && hasEventType && hasLanguage;
+
+    if (!allFiltersFilled) {
+        alert('Please fill/select all the filters above before applying filters.');
+        return;
+    }
+
+    alert('Thank you! Filters applied. Searching events...');
+
+    // Clear the filter form before leaving so browser back/cache cannot restore old values.
+    clearAllEventForms();
+
+    setTimeout(() => {
+        window.location.replace('404.html');
+    }, 400);
+}
+
+// Sort handler
+function handleSort(select) {
+    alert('Sorting by: ' + select.value);
+}
+
+// Price slider
+const slider = document.getElementById('priceSlider');
+const thumb = document.getElementById('rangeThumb');
+const fill = document.getElementById('rangeFill');
+const priceValue = document.getElementById('priceValue');
+if (thumb && slider) {
+    let dragging = false;
+    thumb.addEventListener('mousedown', () => dragging = true);
+    thumb.addEventListener('touchstart', () => dragging = true, {passive: true});
+    document.addEventListener('mouseup', () => dragging = false);
+    document.addEventListener('touchend', () => dragging = false);
+    document.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        const rect = slider.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        x = Math.max(0, Math.min(x, rect.width));
+        const pct = (x / rect.width) * 100;
+        thumb.style.left = pct + '%';
+        fill.style.right = (100 - pct) + '%';
+        const price = Math.round((pct / 100) * 10000);
+        if (priceValue) priceValue.textContent = '₹' + price.toLocaleString();
+    });
+    document.addEventListener('touchmove', (e) => {
+        if (!dragging) return;
+        const rect = slider.getBoundingClientRect();
+        let x = e.touches[0].clientX - rect.left;
+        x = Math.max(0, Math.min(x, rect.width));
+        const pct = (x / rect.width) * 100;
+        thumb.style.left = pct + '%';
+        fill.style.right = (100 - pct) + '%';
+        const price = Math.round((pct / 100) * 10000);
+        if (priceValue) priceValue.textContent = '₹' + price.toLocaleString();
+    }, {passive: true});
+}
+
+// Clear all event/search/filter data whenever this page is opened or restored.
+function clearAllEventForms() {
+    document.querySelectorAll('form').forEach(form => form.reset());
+
+    // Explicitly clear every editable filter/search field.
+    document.querySelectorAll('input[type="text"], input[type="date"], input[type="email"], select').forEach(field => {
+        if (field.id === 'eventCategoryInput') {
+            field.value = '';
+        } else {
+            field.value = '';
+        }
+    });
+
+    document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(field => {
+        field.checked = false;
+    });
+
+    // Restore the default price slider display.
+    const rangeThumb = document.getElementById('rangeThumb');
+    const rangeFill = document.getElementById('rangeFill');
+    const priceValue = document.getElementById('priceValue');
+    if (rangeThumb) rangeThumb.style.left = '70%';
+    if (rangeFill) rangeFill.style.right = '30%';
+    if (priceValue) priceValue.textContent = '₹7,000';
+
+    // Restore the default date filter state.
+    const anyDate = document.querySelector('input[name="date"]');
+    if (anyDate) anyDate.checked = true;
+}
+
+window.addEventListener('load', clearAllEventForms);
+window.addEventListener('pageshow', clearAllEventForms);
+
+// Event search form
+const eventSearchForm = document.getElementById('eventSearchForm');
+const eventSearchInput = document.getElementById('eventSearchInput');
+const eventLocationInput = document.getElementById('eventLocationInput');
+const eventDateInput = document.getElementById('eventDateInput');
+const eventCategoryInput = document.getElementById('eventCategoryInput');
+
+if (eventSearchForm) {
+    eventSearchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const values = [
+            eventSearchInput?.value.trim(),
+            eventLocationInput?.value.trim(),
+            eventDateInput?.value.trim(),
+            eventCategoryInput?.value.trim()
+        ];
+
+        const allSearchFieldsFilled = values.every(Boolean);
+
+        if (!allSearchFieldsFilled) {
+            alert('Please fill in all the search fields above.');
+            return;
+        }
+
+        alert('Thank you! Searching events...');
+
+        // Clear values before navigating so they do not remain after returning.
+        clearAllEventForms();
+
+        setTimeout(() => {
+            window.location.replace('404.html');
+        }, 400);
+    });
+}
+
+// Newsletter form validation
+const newsForm = document.getElementById('newsForm');
+const newsEmail = document.getElementById('newsEmail');
+if (newsForm && newsEmail) {
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = newsEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        newsForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Footer form validation
+const footerForm = document.getElementById('footerForm');
+const footerEmail = document.getElementById('footerEmail');
+if (footerForm && footerEmail) {
+    footerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = footerEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        footerForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+</script>
+<script>
+  // Only elements with an explicit href/handler should navigate.
+  // Do NOT force unused buttons/search/filter controls to 404.
+  document.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', function (event) {
+      if (this.type === 'submit' && this.closest('form')) return;
+      if (this.hasAttribute('onclick')) return;
+      // Intentionally do nothing for standalone UI buttons.
+      event.stopPropagation();
+    });
+  });
+</script>
+</body>
+</html>

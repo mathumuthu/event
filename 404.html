@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - Page Not Found | Stackly</title>
+<meta name="description" content="Oops! This event has left this page. Go back to Stackly homepage.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+/* 3D 404 Text */
+.text-3d {
+    color: #E91E63;
+    text-shadow: 
+        0 1px 0 #C2185B,
+        0 2px 0 #C2185B,
+        0 3px 0 #C2185B,
+        0 4px 0 #C2185B,
+        0 5px 0 #C2185B,
+        0 6px 0 #C2185B,
+        0 7px 0 #C2185B,
+        0 8px 0 #C2185B,
+        0 9px 0 #C2185B,
+        0 10px 15px rgba(233,30,99,0.3);
+    transform: perspective(500px) rotateX(5deg);
+}
+
+/* Vinyl record */
+.vinyl {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: 
+        repeating-radial-gradient(
+            #1a1a1a 0px,
+            #1a1a1a 2px,
+            #0a0a0a 3px,
+            #0a0a0a 4px
+        );
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.vinyl::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px; height: 50px;
+    background: #E91E63;
+    border-radius: 50%;
+    border: 8px solid #1a1a1a;
+}
+.vinyl::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px; height: 12px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+/* Signpost arrows */
+.signpost-arrow {
+    position: relative;
+    background: #E91E63;
+    color: white;
+    padding: 8px 20px 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+.signpost-arrow:hover {
+    transform: translateX(5px);
+    background: #C2185B;
+}
+
+/* Confetti dots */
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+.confetti-pink { background: #E91E63; }
+.confetti-purple { background: #9C27B0; }
+.confetti-blue { background: #3F51B5; }
+
+/* Stage truss */
+.stage-truss {
+    width: 200px;
+    height: 8px;
+    background: #333;
+    position: relative;
+}
+.stage-truss::before,
+.stage-truss::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 30px;
+    background: #333;
+    top: 0;
+}
+.stage-truss::before { left: 20px; }
+.stage-truss::after { right: 20px; }
+
+/* Spotlight */
+.spotlight {
+    width: 20px;
+    height: 20px;
+    background: #E91E63;
+    border-radius: 50%;
+    box-shadow: 0 0 20px #E91E63, 0 0 40px #E91E63;
+    animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Boombox */
+.boombox {
+    width: 80px;
+    height: 50px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    position: relative;
+    border: 2px solid #333;
+}
+.boombox::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: #333;
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+.boombox::after {
+    content: '';
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: #333;
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+
+/* Speaker */
+.speaker-box {
+    width: 50px;
+    height: 80px;
+    background: #1a1a1a;
+    border-radius: 4px;
+    position: relative;
+    border: 2px solid #333;
+}
+.speaker-box::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px;
+    background: #333;
+    border-radius: 50%;
+    border: 2px solid #E91E63;
+}
+.speaker-box::after {
+    content: '';
+    position: absolute;
+    bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 20px; height: 20px;
+    background: #333;
+    border-radius: 50%;
+    border: 2px solid #E91E63;
+}
+
+/* Question mark bubble */
+.question-bubble {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #E91E63;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E91E63;
+    font-size: 24px;
+    font-weight: bold;
+    background: white;
+    animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.btn-primary { transition: all 0.3s ease; }
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(233,30,99,0.35);
+}
+
+.btn-outline {
+    transition: all 0.3s ease;
+}
+.btn-outline:hover {
+    background: #E91E63;
+    border-color: #E91E63;
+    color: white;
+}
+
+/* Mobile menu */
+.mobile-menu {
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+.mobile-menu.open {
+    max-height: 500px; opacity: 1;
+}
+
+input:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+           <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-primary tracking-tight">STACKLY</span>
+</a>
+               
+            <nav class="hidden lg:flex items-center gap-7">
+                <a href="index.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Home</a>
+                <a href="events.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Events</a>
+                <a href="categories.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Categories</a>
+                <a href="about.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">About Us</a>
+                <a href="blog.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Blog</a>
+                <a href="contact.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Contact</a>
+            </nav>
+            <div class="hidden lg:flex items-center gap-4">
+                <button class="text-gray-500 hover:text-dark transition-colors" aria-label="Search"><i class="fas fa-search text-sm"></i></button>
+                <a href="login.html" class="text-gray-600 text-sm font-medium hover:text-primary transition-colors">Log In</a>
+                <a href="signup.html" class="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-full text-sm font-semibold transition-all">Sign Up</a>
+            </div>
+            <button id="menuBtn" class="lg:hidden text-dark p-2" aria-label="Menu" onclick="toggleMenu()">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu lg:hidden border-t border-gray-100">
+            <div class="px-4 py-5 space-y-1">
+                <a href="index.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">Home</a>
+                <a href="events.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">Events</a>
+                <a href="categories.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">Categories</a>
+                <a href="about.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">About Us</a>
+                <a href="blog.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">Blog</a>
+                <a href="contact.html" class="block text-gray-800 font-medium py-2.5 border-b border-gray-100">Contact</a>
+                <div class="pt-3 flex flex-col gap-2">
+                    <a href="login.html" class="text-gray-800 font-medium py-2">Log In</a>
+                    <a href="signup.html" class="bg-primary text-white px-5 py-2.5 rounded-full text-center font-semibold text-sm">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== 404 HERO SECTION ========== -->
+<section class="relative pt-8 pb-16 lg:pt-12 lg:pb-24 overflow-hidden bg-white">
+
+    <!-- Confetti decorations -->
+    <div class="confetti confetti-pink" style="top: 8%; left: 5%;"></div>
+    <div class="confetti confetti-purple" style="top: 12%; left: 15%;"></div>
+    <div class="confetti confetti-blue" style="top: 6%; left: 25%;"></div>
+    <div class="confetti confetti-pink" style="top: 15%; right: 20%;"></div>
+    <div class="confetti confetti-purple" style="top: 10%; right: 10%;"></div>
+    <div class="confetti confetti-blue" style="top: 20%; right: 5%;"></div>
+    <div class="confetti confetti-pink" style="top: 35%; left: 8%;"></div>
+    <div class="confetti confetti-purple" style="top: 40%; right: 15%;"></div>
+    <div class="confetti confetti-blue" style="top: 30%; left: 30%;"></div>
+    <div class="confetti confetti-pink" style="top: 45%; right: 8%;"></div>
+    <div class="confetti confetti-purple" style="top: 50%; left: 20%;"></div>
+    <div class="confetti confetti-blue" style="top: 55%; right: 25%;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-4">
+
+            <!-- Left Side: Signpost + Vinyl -->
+            <div class="hidden lg:flex flex-col items-start gap-2 relative">
+                <!-- Signpost -->
+                <div class="flex flex-col items-start mb-4">
+                    <a href="events.html" class="signpost-arrow">
+                        <i class="fas fa-arrow-left text-xs"></i> Events
+                    </a>
+                    <a href="categories.html" class="signpost-arrow" style="margin-left: 10px;">
+                        <i class="fas fa-arrow-left text-xs"></i> Categories
+                    </a>
+                    <a href="blog.html" class="signpost-arrow" style="margin-left: 20px;">
+                        <i class="fas fa-arrow-left text-xs"></i> Blog
+                    </a>
+                    <a href="contact.html" class="signpost-arrow" style="margin-left: 30px;">
+                        <i class="fas fa-arrow-left text-xs"></i> Contact Us
+                    </a>
+                </div>
+                <!-- Signpost pole -->
+                <div class="w-1 h-16 bg-gray-300 ml-8 rounded-full"></div>
+                <!-- Plant -->
+                <div class="relative ml-4">
+                    <div class="w-8 h-8 bg-green-500 rounded-full absolute -top-4 left-2"></div>
+                    <div class="w-8 h-8 bg-green-400 rounded-full absolute -top-6 left-6"></div>
+                    <div class="w-10 h-12 bg-gray-400 rounded-lg mx-auto"></div>
+                </div>
+            </div>
+
+            <!-- Center: 404 Illustration -->
+            <div class="relative flex-1 max-w-2xl mx-auto text-center">
+                <!-- Stage truss -->
+                <div class="absolute top-0 right-10 hidden lg:block">
+                    <div class="stage-truss"></div>
+                    <div class="flex gap-8 mt-1">
+                        <div class="spotlight"></div>
+                        <div class="spotlight" style="animation-delay: 0.5s;"></div>
+                        <div class="spotlight" style="animation-delay: 1s;"></div>
+                    </div>
+                </div>
+
+                <!-- 404 Text with Character -->
+                <div class="relative flex items-center justify-center gap-2 lg:gap-4 mt-8 lg:mt-0">
+                    <!-- 4 -->
+                    <span class="text-3d text-[120px] sm:text-[160px] lg:text-[200px] font-black leading-none select-none">4</span>
+
+                    <!-- 0 with character inside -->
+                    <div class="relative">
+                        <span class="text-3d text-[120px] sm:text-[160px] lg:text-[200px] font-black leading-none select-none">0</span>
+                        <!-- Character illustration -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="relative w-24 h-32 sm:w-32 sm:h-40 lg:w-40 lg:h-48">
+                                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-32 bg-primary rounded-t-2xl"></div>
+                                <div class="absolute bottom-20 left-1/2 -translate-x-1/2 w-12 h-14 sm:w-14 sm:h-16 lg:w-16 lg:h-18 bg-amber-200 rounded-xl"></div>
+                                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2">
+                                    <div class="w-5 h-10 sm:w-6 sm:h-12 bg-gray-800 rounded-t-lg"></div>
+                                    <div class="w-5 h-10 sm:w-6 sm:h-12 bg-gray-800 rounded-t-lg"></div>
+                                </div>
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 flex gap-2">
+                                    <div class="w-6 h-3 sm:w-7 sm:h-3 bg-primary rounded-full"></div>
+                                    <div class="w-6 h-3 sm:w-7 sm:h-3 bg-primary rounded-full"></div>
+                                </div>
+                                <div class="absolute -top-4 right-0 question-bubble">?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 -->
+                    <span class="text-3d text-[120px] sm:text-[160px] lg:text-[200px] font-black leading-none select-none">4</span>
+                </div>
+
+                <!-- Bottom props -->
+                <div class="flex items-end justify-center gap-4 mt-4 lg:mt-0">
+                    <div class="speaker-box hidden sm:block"></div>
+                    <div class="boombox"></div>
+                    <div class="speaker-box hidden sm:block"></div>
+                </div>
+            </div>
+
+            <!-- Right Side: Vinyl Record -->
+            <div class="hidden lg:block">
+                <div class="vinyl"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vinyl records on sides -->
+    <div class="absolute -left-20 top-1/2 -translate-y-1/2 hidden md:block">
+        <div class="vinyl" style="width: 140px; height: 140px;"></div>
+    </div>
+    <div class="absolute -right-20 top-1/2 -translate-y-1/2 hidden md:block">
+        <div class="vinyl" style="width: 140px; height: 140px;"></div>
+    </div>
+</section>
+
+<!-- ========== TEXT SECTION ========== -->
+<section class="py-12 lg:py-16 bg-white relative">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-dark mb-2">
+            Oops! This Event Has<br>
+            <span class="text-primary">Left</span> this page
+        </h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-6 rounded-full"></div>
+        <p class="text-gray-500 text-base sm:text-lg leading-relaxed mb-10 max-w-lg mx-auto">
+            Look like the event that you looking for is off the<br>
+            stage .Lets get you back an track
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="history.back()" class="btn-outline w-full sm:w-auto border-2 border-primary text-primary px-10 py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-primary hover:text-white transition-all">
+                <i class="fas fa-arrow-left mr-2 text-sm"></i>Previous
+            </button>
+            <a href="index.html" class="btn-primary w-full sm:w-auto inline-block bg-primary hover:bg-primary-dark text-white px-10 py-4 rounded-full font-semibold text-base sm:text-lg">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-14 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Stay Updated with Stackly</h2>
+                <p class="text-white/70 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form class="w-full max-w-md" onsubmit="event.preventDefault(); alert('Thank you!'); window.location.href='404.html';">
+                <div class="flex gap-2 bg-white rounded-full p-1.5">
+                    <input type="email" placeholder="Enter your email" required class="flex-1 px-4 py-2.5 rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-14 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+            <div>
+               <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/45 text-xs leading-relaxed mb-5">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-2.5">
+                    <a href="404.html" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-[11px]"></i></a>
+                    <a href="404.html" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-[11px]"></i></a>
+                    <a href="404.html" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-[11px]"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-xs uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-xs uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="about.html" class="text-white/45 text-xs hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="contact.html" class="text-white/45 text-xs hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/45 text-xs hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-xs uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/45 text-xs mb-3 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form class="flex gap-2" onsubmit="event.preventDefault(); alert('Thank you!'); window.location.href='404.html';">
+                    <input type="email" placeholder="Enter your email address..." required class="flex-1 px-3 py-2 bg-white/10 rounded-lg text-xs text-white placeholder-white/35 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-semibold text-xs whitespace-nowrap transition-all">Subscribe Now</button>
+                </form>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p class="text-white/25 text-[11px]">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-5">
+                <a href="404.html" class="text-white/25 text-[11px] hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/25 text-[11px] hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Mobile menu toggle
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('menuBtn');
+    const isOpen = menu.classList.contains('open');
+
+    if (isOpen) {
+        menu.classList.remove('open');
+        btn.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+        document.body.style.overflow = '';
+    } else {
+        menu.classList.add('open');
+        btn.innerHTML = '<i class="fas fa-times text-lg"></i>';
+        document.body.style.overflow = 'hidden';
+    }
+}
+</script>
+</body>
+</html>

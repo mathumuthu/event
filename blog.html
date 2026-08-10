@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog - Stackly</title>
+<meta name="description" content="Read the latest blogs and insights from Stackly.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#E91E63',
+                'primary-dark': '#C2185B',
+                'primary-light': '#FCE4EC',
+                dark: '#0B0B1A',
+                'dark-card': '#12121F',
+            },
+            fontFamily: {
+                sans: ['Inter','sans-serif'],
+                script: ['Dancing Script','cursive'],
+            }
+        }
+    }
+}
+</script>
+
+<style>
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #E91E63; border-radius: 3px; }
+
+.hero-bg {
+    background: linear-gradient(180deg, rgba(11,11,26,0.3) 0%, rgba(11,11,26,0.6) 50%, rgba(11,11,26,0.95) 100%),
+                url('img1.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.news-bg {
+    background: linear-gradient(135deg, #E91E63 0%, #9C27B0 60%, #7B1FA2 100%);
+}
+
+.nav-link { position: relative; }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: #E91E63; border-radius: 2px; transition: width 0.3s ease;
+}
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+.blog-card { transition: all 0.35s ease; }
+.blog-card:hover { transform: translateY(-6px); box-shadow: 0 20px 45px rgba(0,0,0,0.12); }
+.blog-card:hover .blog-img { transform: scale(1.05); }
+
+.filter-tab { transition: all 0.2s ease; white-space: nowrap; cursor: pointer; }
+.filter-tab.active { background: #E91E63; color: white; }
+.filter-tab:hover:not(.active) { background: #FCE4EC; color: #E91E63; }
+
+.tag-pill { transition: all 0.2s ease; }
+.tag-pill:hover { background: #E91E63; color: white; border-color: #E91E63; }
+
+.btn-primary {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(233,30,99,0.35);
+}
+
+.pagination-btn {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 13px; font-weight: 600; transition: all 0.2s;
+}
+.pagination-btn.active { background: #E91E63; color: white; }
+.pagination-btn:not(.active):hover { background: #f3f4f6; }
+
+/* Mobile menu fix */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    display: block;
+}
+.mobile-menu.open {
+    max-height: 600px;
+    opacity: 1;
+}
+@media (min-width: 1024px) {
+    .mobile-menu { display: none !important; }
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* No horizontal scroll */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; height: auto; }
+
+input:focus { outline: none; }
+</style>
+</head>
+<body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
+
+<!-- ========== HEADER ========== -->
+<header id="navbar" class="sticky top-0 z-50 transition-all duration-300 bg-dark/95 backdrop-blur-xl shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+           <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Home</a>
+                <a href="event.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Events</a>
+                <a href="cat.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Categories</a>
+                <a href="about.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">About Us</a>
+                <a href="blog.html" class="nav-link active text-primary text-sm font-semibold">Blog</a>
+                <a href="contact.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-5">
+                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+            </div>
+
+            <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu lg:hidden bg-dark-card/98 backdrop-blur-xl border-t border-white/10">
+        <div class="px-6 py-6 space-y-1">
+            <a href="index.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Home</a>
+            <a href="event.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Events</a>
+            <a href="cat.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Categories</a>
+            <a href="about.html" class="block text-white/80 font-medium py-3 border-b border-white/5">About Us</a>
+            <a href="blog.html" class="block text-primary font-semibold py-3 border-b border-white/5">Blog</a>
+            <a href="contact.html" class="block text-white/80 font-medium py-3 border-b border-white/5">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="login.html" class="text-white font-medium py-2">Log In</a>
+                <a href="sig.html" class="btn-primary bg-primary text-white px-6 py-3 rounded-full text-center font-semibold">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero-bg pt-28 pb-20 relative">
+    <div class="max-w-4xl mx-auto px-4 text-center pt-10 pb-2" data-aos="fade-up">
+        <p class="font-script text-primary text-3xl md:text-4xl mb-2">Stories</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+            Blogs and <span class="text-primary">Insights</span>
+        </h1>
+        <div class="w-12 h-1 bg-primary mx-auto mb-5 rounded-full"></div>
+        <p class="text-white/70 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+            Tips, ideas, and inspiration to help you create and<br>enjoy amazing events.
+        </p>
+    </div>
+</section>
+
+<!-- ========== BLOG CONTENT ========== -->
+<section class="py-10 bg-gray-50/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Filter Bar -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8" data-aos="fade-up">
+        <a href="404.html">   <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide w-full sm:w-auto">
+                <button type="button" class="filter-tab active px-5 py-2 rounded-full text-xs font-semibold" onclick="setActiveFilter(this)">All Posts</button>
+                <button type="button" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-100" onclick="setActiveFilter(this)"><i class="far fa-file-alt mr-1"></i>Event Tips</button>
+                <button type="button" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-100" onclick="setActiveFilter(this)"><i class="far fa-lightbulb mr-1"></i>Inspiration</button>
+                <button type="button" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-100" onclick="setActiveFilter(this)"><i class="far fa-calendar-check mr-1"></i>Planning</button>
+                <button type="button" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-100" onclick="setActiveFilter(this)"><i class="far fa-star mr-1"></i>Spotlight</button>
+                <button type="button" class="filter-tab px-5 py-2 rounded-full text-xs font-semibold text-gray-600 bg-white border border-gray-100" onclick="setActiveFilter(this)"><i class="fas fa-chart-line mr-1"></i>Trends</button>
+            </div></a> 
+            <form id="blogSearchForm" class="relative w-full sm:w-auto">
+                <input type="text" id="blogSearchInput" placeholder="Search articles..." class="w-full sm:w-56 px-4 py-2.5 bg-white rounded-xl text-sm text-gray-700 placeholder-gray-400 border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all pr-10">
+                <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-primary rounded-lg flex items-center justify-center text-white text-xs">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- LEFT: Blog Grid -->
+            <div class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img1.webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Event Tips</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 15, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>5 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">10 Tips for Hosting a Successful Event</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">From planning to execution, these expert tips will help you create an unforgettable experience for all your attendees.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img2.webp" alt="Priya" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Priya Sharma</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img3 (1).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Planning</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 12, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>4 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">How to Choose the Perfect Venue for Your Event</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">A complete guide to finding a venue that matches your needs, budget, and guest experience requirements.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img4.webp" alt="Aman" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Aman Verma</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img3 (1).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Inspiration</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 10, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>6 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">Creative Event Ideas to Inspire You</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">Unique and creative event ideas that will leave your attendees talking long after the event is over.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img4.webp" alt="Neha" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Neha Iyer</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img8 (2).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Event Tips</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 3, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>5 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">How to Promote Your Event Like a Pro</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">Proven strategies to market your event, attract the right audience, and boost ticket sales significantly.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img9 (2).webp" alt="Vikram" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Vikram Joshi</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="0">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img5 (4).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Trends</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 8, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>4 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">Top Event Trends to Watch in 2024</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">Stay ahead of the curve with the latest trends shaping the future of events and experiences globally.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img10.webp" alt="Rahul" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Rahul Mehta</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="blog-card bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" data-aos="fade-up" data-aos-delay="50">
+                        <div class="relative h-52 overflow-hidden">
+                            <img src="img11 (1).webp" alt="Blog" class="blog-img w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute bottom-3 left-3 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Spotlight</span>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-3 text-gray-400 text-[11px] mb-3">
+                                <span><i class="far fa-calendar mr-1"></i>May 5, 2024</span>
+                                <span><i class="far fa-clock mr-1"></i>3 min read</span>
+                            </div>
+                            <h3 class="font-bold text-dark text-base mb-2 leading-snug">Behind the Scenes: How We Make Events Memorable</h3>
+                            <p class="text-gray-500 text-xs leading-relaxed mb-4">A look behind the curtain at the planning, passion, and people who bring events to life.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <img src="img4.webp" alt="Sneha" class="w-7 h-7 rounded-full object-cover">
+                                    <span class="text-xs font-semibold text-dark">Sneha Kapoor</span>
+                                </div>
+                                <a href="404.html" class="text-primary text-xs font-semibold hover:underline">Read More <i class="fas fa-arrow-right text-[9px]"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-center gap-2 mt-10" data-aos="fade-up">
+                    <a href="404.html" class="pagination-btn text-gray-400 hover:text-dark"><i class="fas fa-chevron-left text-xs"></i></a>
+                    <a href="404.html" class="pagination-btn active">1</a>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">2</a>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">3</a>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">4</a>
+                    <span class="text-gray-400 text-sm px-1">...</span>
+                    <a href="404.html" class="pagination-btn text-gray-600 hover:bg-gray-100">10</a>
+                    <a href="404.html" class="pagination-btn text-gray-400 hover:text-dark"><i class="fas fa-chevron-right text-xs"></i></a>
+                </div>
+            </div>
+
+            <!-- RIGHT: Sidebar -->
+            <aside class="w-full lg:w-72 flex-shrink-0 space-y-6" data-aos="fade-left">
+
+                <!-- Categories -->
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <h3 class="font-bold text-dark text-sm mb-4">Categories</h3>
+                    <div class="space-y-3">
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-primary font-semibold">All Posts</span>
+                            <span class="text-primary font-bold text-xs">24</span>
+                        </a>
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Event Tips</span>
+                            <span class="text-gray-400 text-xs">8</span>
+                        </a>
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Inspiration</span>
+                            <span class="text-gray-400 text-xs">6</span>
+                        </a>
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Planning</span>
+                            <span class="text-gray-400 text-xs">5</span>
+                        </a>
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Spotlight</span>
+                            <span class="text-gray-400 text-xs">3</span>
+                        </a>
+                        <a href="404.html" class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Trends</span>
+                            <span class="text-gray-400 text-xs">2</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Popular Posts -->
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <h3 class="font-bold text-dark text-sm mb-4">Popular Posts</h3>
+                    <div class="space-y-4">
+                        <a href="404.html" class="flex gap-3 group">
+                            <img src="img1.webp" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">
+                            <div>
+                                <h4 class="text-xs font-semibold text-dark leading-snug group-hover:text-primary transition-colors">10 Tips for Hosting a Successful Event</h4>
+                                <p class="text-gray-400 text-[10px] mt-1">MAY 15, 2024</p>
+                            </div>
+                        </a>
+                        <a href="404.html" class="flex gap-3 group">
+                            <img src="img2.webp" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">
+                            <div>
+                                <h4 class="text-xs font-semibold text-dark leading-snug group-hover:text-primary transition-colors">How to Choose the Perfect Venue</h4>
+                                <p class="text-gray-400 text-[10px] mt-1">MAY 12, 2024</p>
+                            </div>
+                        </a>
+                        <a href="404.html" class="flex gap-3 group">
+                            <img src="img5 (4).webp" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">
+                            <div>
+                                <h4 class="text-xs font-semibold text-dark leading-snug group-hover:text-primary transition-colors">Top Event Trends to Watch in 2024</h4>
+                                <p class="text-gray-400 text-[10px] mt-1">MAY 8, 2024</p>
+                            </div>
+                        </a>
+                        <a href="404.html" class="flex gap-3 group">
+                            <img src="img9 (2).webp" alt="" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">
+                            <div>
+                                <h4 class="text-xs font-semibold text-dark leading-snug group-hover:text-primary transition-colors">How to Promote Your Event Like a Pro</h4>
+                                <p class="text-gray-400 text-[10px] mt-1">MAY 3, 2024</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CTA Card -->
+                <div class="bg-dark rounded-2xl p-6 text-white relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h4 class="font-bold text-base mb-2">Have an Event Story?</h4>
+                        <p class="text-white/60 text-xs leading-relaxed mb-5">Share your experience and inspire others in the Evently community.</p>
+                        <a href="404.html" class="btn-primary block w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-xl text-xs font-semibold text-center">Write for Us</a>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 text-white/5 text-8xl">
+                        <i class="fas fa-pen-nib"></i>
+                    </div>
+                </div>
+
+                <!-- Tag Cloud -->
+                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <h3 class="font-bold text-dark text-sm mb-4">Tag Cloud</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Event Planning</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Venue</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Marketing</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Inspiration</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Trends</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Tips</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Events</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Community</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Behind the Scenes</a>
+                        <a href="404.html" class="tag-pill px-3 py-1.5 bg-gray-50 text-primary text-[11px] font-medium rounded-lg border border-gray-100">Success Stories</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="news-bg py-14 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-white/5 rounded-full translate-x-1/3 translate-y-1/3"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="text-center lg:text-left" data-aos="fade-right">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-1">Stay Updated with Stackly</h2>
+                <p class="text-white/70 text-sm">Subscribe to our newsletter and never miss out on exciting events and offers.</p>
+            </div>
+            <form id="newsForm" class="w-full max-w-md" data-aos="fade-left">
+                <div class="flex gap-2 bg-white rounded-full p-1.5">
+                    <input type="email" id="newsEmail" placeholder="Enter your email" required class="flex-1 px-4 py-2.5 rounded-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-0 focus:ring-0">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+                <a href="index.html" class="flex items-center gap-0 group">
+    <img src="logo.png"
+         alt="Stackly Logo"
+         class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-110 -mr-1">
+    <span class="text-2xl font-bold text-white tracking-tight">STACKLY</span>
+</a>
+                <p class="text-white/50 text-sm leading-relaxed mb-6">
+                    Ishowevent is a global self-service ticketing platform for live experiences that allows anyone to create, share, find and attend events that fuel their passions and enrich their lives.
+                </p>
+                <div class="flex gap-3">
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Plan Events</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Create and Set Up</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Sell Tickets</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online RSVP</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Online Events</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Ishowevent</h4>
+                <ul class="space-y-3">
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Press</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Contact Us</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Help Center</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">How it Works</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Privacy</a></li>
+                    <li><a href="404.html" class="text-white/50 text-sm hover:text-primary transition-colors">Terms</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-white mb-5 text-sm uppercase tracking-wider">Stay In The Loop</h4>
+                <p class="text-white/50 text-sm mb-4 leading-relaxed">Join our mailing list to stay in the loop with our newest for Event and concert</p>
+                <form id="footerForm" class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" id="footerEmail" placeholder="Enter your email address..." required
+                           class="flex-1 min-w-0 px-4 py-2.5 bg-white/10 rounded-lg text-sm text-white placeholder-white/40 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary transition-all">
+                    <button type="submit" class="btn-primary bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap shrink-0 transition-all">
+                        Subscribe Now
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-white/30 text-xs">&copy; 2024 Stackly. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Privacy Policy</a>
+                <a href="404.html" class="text-white/30 text-xs hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 700, once: true, offset: 60, easing: 'ease-out-cubic' });
+
+const navbar = document.getElementById('navbar');
+if (navbar) {
+    navbar.classList.add('bg-dark/95', 'backdrop-blur-xl', 'shadow-lg');
+}
+
+// Mobile menu
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        menuBtn.innerHTML = menuOpen ? '<i class="fas fa-times text-lg"></i>' : '<i class="fas fa-bars text-lg"></i>';
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024 && menuOpen) {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            menuBtn.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Filter tabs
+function setActiveFilter(btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => {
+        t.classList.remove('active');
+        t.classList.add('text-gray-600', 'bg-white', 'border', 'border-gray-100');
+    });
+    btn.classList.add('active');
+    btn.classList.remove('text-gray-600', 'bg-white', 'border', 'border-gray-100');
+}
+
+// Clear all forms on page load / back navigation from 404
+window.addEventListener('load', () => {
+    document.querySelectorAll('form').forEach(f => f.reset());
+});
+window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+        document.querySelectorAll('form').forEach(f => f.reset());
+    }
+});
+
+// Blog search form
+const blogSearchForm = document.getElementById('blogSearchForm');
+const blogSearchInput = document.getElementById('blogSearchInput');
+if (blogSearchForm && blogSearchInput) {
+    blogSearchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = blogSearchInput.value.trim();
+        if (!val) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        alert('Thank you! Searching articles...');
+        blogSearchForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Newsletter form validation
+const newsForm = document.getElementById('newsForm');
+const newsEmail = document.getElementById('newsEmail');
+if (newsForm && newsEmail) {
+    newsForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = newsEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        newsForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+
+// Footer form validation
+const footerForm = document.getElementById('footerForm');
+const footerEmail = document.getElementById('footerEmail');
+if (footerForm && footerEmail) {
+    footerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const val = footerEmail.value.trim();
+        if (!val) {
+            alert('Please enter your email address.');
+            return;
+        }
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRe.test(val)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        alert('Thank you! Your subscription has been received successfully.');
+        footerForm.reset();
+        setTimeout(() => { window.location.href = '404.html'; }, 400);
+    });
+}
+</script>
+<script>
+  const skipButtonSelectors = [
+    '#menuBtn',
+    '.heart-btn',
+    '.cat-tab',
+    '.filter-tab',
+    '.role-btn',
+    '.pagination-btn',
+    '.dot',
+    '[aria-label="Notifications"]',
+    '[aria-label="Messages"]',
+    'button[aria-label="1"]',
+    'button[aria-label="2"]',
+    'button[aria-label="3"]',
+    'button[aria-label="4"]'
+  ];
+
+  document.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.stackly404Bound) return;
+
+    const hasExplicitAction = button.hasAttribute('onclick') || button.type === 'submit' || button.closest('form') || button.matches(skipButtonSelectors.join(', '));
+    if (hasExplicitAction) {
+      button.dataset.stackly404Bound = 'true';
+      return;
+    }
+
+    button.dataset.stackly404Bound = 'true';
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+</script>
+</body>
+</html>
