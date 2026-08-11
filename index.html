@@ -129,6 +129,92 @@ html, body { overflow-x: hidden; }
 img { max-width: 100%; height: auto; }
 
 input:focus, select:focus { outline: none; }
+
+
+
+.header-search input {
+    backdrop-filter: blur(10px);
+}
+
+.header-search input:focus {
+    outline: none;
+    width: 240px;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
+}
+
+@media (max-width: 1280px) {
+    .header-search input {
+        width: 160px;
+    }
+
+    .header-search input:focus {
+        width: 200px;
+    }
+}
+/* =====================================================
+   MOBILE HERO OVERLAP FIX
+   ===================================================== */
+
+@media (max-width: 639px) {
+
+    /* Hero becomes normal document flow */
+    section.relative.min-h-\[72vh\] {
+        min-height: auto !important;
+        height: auto !important;
+        display: block !important;
+        padding-top: 100px !important;
+        padding-bottom: 24px !important;
+        overflow: visible !important;
+    }
+
+    /* Hero content */
+    section.relative.min-h-\[72vh\] > .relative.z-10 {
+        padding-top: 20px !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Search container */
+    section.relative.min-h-\[72vh\] > div.absolute.bottom-6 {
+        position: relative !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        margin-top: 32px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        transform: none !important;
+    }
+
+    /* Search form */
+    #searchForm {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 16px !important;
+        margin: 0 !important;
+    }
+
+    #searchForm > div {
+        width: 100% !important;
+    }
+
+    #searchForm label {
+        margin-bottom: 6px !important;
+    }
+
+    #searchForm button {
+        width: 100% !important;
+        margin-top: 4px !important;
+    }
+
+    /* Remove the old spacer problem */
+    section.relative.min-h-\[72vh\] + .h-24 {
+        height: 24px !important;
+    }
+}
 </style>
 </head>
 <body class="font-sans antialiased text-gray-800 bg-white overflow-x-hidden">
@@ -153,10 +239,48 @@ input:focus, select:focus { outline: none; }
                 <a href="contact.html" class="nav-link text-white/80 text-sm font-medium hover:text-white transition-colors">Contact</a>
             </nav>
 
-            <div class="hidden lg:flex items-center gap-5">
-                <a href="login.html" class="text-white/80 hover:text-white transition-colors text-sm font-medium">Log In</a>
-                <a href="sig.html" class="btn-primary bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
-            </div>
+           <div class="hidden lg:flex items-center gap-4">
+
+    <!-- Expandable Search -->
+    <div id="headerSearchBox"
+         class="relative flex items-center">
+
+        <button id="headerSearchBtn"
+                type="button"
+                class="w-10 h-10 rounded-full
+                       flex items-center justify-center
+                       text-white/80 hover:text-white
+                       hover:bg-white/10 transition-all">
+            <i class="fas fa-search"></i>
+        </button>
+
+        <input
+            type="text"
+            id="headerSearchInput"
+            placeholder="Search events..."
+            class="absolute right-0 top-0 w-0 opacity-0
+                   h-10 rounded-full
+                   bg-white/10 border border-white/20
+                   text-white text-sm
+                   placeholder-white/50
+                   pl-4 pr-10
+                   transition-all duration-300"
+        >
+    </div>
+
+    <a href="login.html"
+       class="text-white/80 hover:text-white text-sm font-medium">
+        Log In
+    </a>
+
+    <a href="sig.html"
+       class="btn-primary bg-primary hover:bg-primary-dark
+              text-white px-6 py-2.5 rounded-full
+              text-sm font-semibold">
+        Sign Up
+    </a>
+
+</div>
 
             <button id="menuBtn" class="lg:hidden text-white p-2" aria-label="Menu">
                 <i class="fas fa-bars text-xl"></i>
@@ -182,7 +306,8 @@ input:focus, select:focus { outline: none; }
 </header>
 
 <!-- ========== HERO SECTION ========== -->
-<section class="relative min-h-[72vh] flex items-end pb-32 lg:pb-36 overflow-hidden">    <div class="absolute inset-0 z-0">
+<section id="homeHero"
+         class="relative min-h-[72vh] flex items-end pb-32 lg:pb-36 overflow-hidden">    <div class="absolute inset-0 z-0">
         <img src="img1 (1).webp" alt="Concert" class="w-full h-full object-cover">
         <div class="hero-bg absolute inset-0"></div>
     </div>
@@ -211,7 +336,8 @@ input:focus, select:focus { outline: none; }
     </div>
 
     <!-- Search Bar -->
-<div class="absolute bottom-6 left-0 right-0 z-20 px-4">        <div class="max-w-6xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+<div id="heroSearch"
+     class="absolute bottom-6 left-0 right-0 z-20 px-4">      <div class="max-w-6xl mx-auto" data-aos="fade-up" data-aos-delay="300">
             <form id="searchForm" class="bg-white rounded-2xl shadow-2xl p-4 md:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
                 <div class="relative">
                     <label class="block text-[11px] font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Search Events</label>
@@ -801,7 +927,8 @@ input:focus, select:focus { outline: none; }
                 </p>
                 <div class="flex gap-3">
                     <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f text-xs"></i></a>
-                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter"><i class="fab fa-twitter text-xs"></i></a>
+                    <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter">    <i class="fa-brands fa-x-twitter text-xs"></i>
+</a>
                     <a href="404.html" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
                 </div>
             </div>
@@ -1003,6 +1130,65 @@ if (footerForm && footerEmail) {
       window.location.href = '404.html';
     });
   });
+
+
+
+
+
+const headerSearchBtn = document.getElementById('headerSearchBtn');
+const headerSearchInput = document.getElementById('headerSearchInput');
+
+if (headerSearchBtn && headerSearchInput) {
+
+    headerSearchBtn.addEventListener('click', function () {
+
+        headerSearchInput.classList.toggle('w-0');
+        headerSearchInput.classList.toggle('w-56');
+        headerSearchInput.classList.toggle('opacity-0');
+        headerSearchInput.classList.toggle('opacity-100');
+
+        if (headerSearchInput.classList.contains('w-56')) {
+            headerSearchInput.focus();
+        }
+    });
+
+    headerSearchInput.addEventListener('keydown', function(e) {
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+
+            const value = this.value.trim();
+
+            if (!value) {
+                alert('Please enter an event to search.');
+                return;
+            }
+
+            localStorage.setItem('stacklySearch', value);
+            window.location.href = 'event.html';
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>

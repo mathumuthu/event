@@ -375,14 +375,15 @@ function validatePassword() {
         return false;
     }
 
-    // Exactly 8 characters with at least:
-    // 1 uppercase letter, 1 lowercase letter, and 1 number.
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8}$/;
+    // Exactly 8 characters:
+    // 1 uppercase + 1 lowercase + 1 number + 1 special character
+    const passwordRegex =
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8}$/;
 
     if (!passwordRegex.test(value)) {
         showError(
             passwordError,
-            'Password must be exactly 8 characters with uppercase, lowercase and a number.'
+            'Password must be 8 characters with uppercase, lowercase, number and special character.'
         );
         passwordInput.style.borderColor = '#ef4444';
         return false;
@@ -395,31 +396,35 @@ function validatePassword() {
 
 function validateConfirmPassword() {
     const value = confirmPasswordInput.value;
+
     if (!value) {
         showError(confirmPasswordError, 'Please confirm your password.');
         confirmPasswordInput.style.borderColor = '#ef4444';
         return false;
     }
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8}$/;
+
+    const passwordRegex =
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8}$/;
 
     if (!passwordRegex.test(value)) {
         showError(
             confirmPasswordError,
-            'Confirm Password must be exactly 8 characters with uppercase, lowercase and a number.'
+            'Confirm Password must be 8 characters with uppercase, lowercase, number and special character.'
         );
         confirmPasswordInput.style.borderColor = '#ef4444';
         return false;
     }
+
     if (value !== passwordInput.value) {
         showError(confirmPasswordError, 'Passwords do not match.');
         confirmPasswordInput.style.borderColor = '#ef4444';
         return false;
     }
+
     hideError(confirmPasswordError);
     confirmPasswordInput.style.borderColor = 'transparent';
     return true;
 }
-
 function validateTerms() {
     if (!termsInput.checked) {
         showError(termsError, 'You must agree to the Terms and Privacy Policy.');

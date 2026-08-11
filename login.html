@@ -211,21 +211,33 @@ input:focus { outline: none; }
                 </div>
 
                 <!-- Password Field -->
-                <div>
-                    <div class="relative">
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
-                            <i class="fas fa-lock text-sm"></i>
-                        </div>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            placeholder="Password (8+ chars, A-Z, a-z, 0-9)" 
-                            class="input-field w-full pl-11 pr-4 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
-                            required
-                        >
-                    </div>
-                    <p id="passwordError" class="text-red-400 text-xs mt-1.5 hidden"></p>
-                </div>
+             <!-- Password Field -->
+<div>
+    <div class="relative">
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary">
+            <i class="fas fa-lock text-sm"></i>
+        </div>
+
+        <input 
+            type="password" 
+            id="password" 
+            placeholder="Password (8+ chars, A-Z, a-z, 0-9)" 
+            class="input-field w-full pl-11 pr-11 py-3 bg-white rounded-xl text-sm text-dark placeholder-gray-400 border border-transparent"
+            required
+        >
+
+        <!-- Eye Button -->
+        <button
+            type="button"
+            id="togglePassword"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
+            aria-label="Show password">
+            <i class="fas fa-eye text-sm"></i>
+        </button>
+    </div>
+
+    <p id="passwordError" class="text-red-400 text-xs mt-1.5 hidden"></p>
+</div>
 
                 <!-- Remember Me & Forgot Password -->
                 <div class="flex items-center justify-between">
@@ -435,6 +447,57 @@ loginForm.addEventListener('submit', function(e) {
       window.location.href = '404.html';
     });
   });
+
+
+
+
+
+
+
+
+
+
+
+// Password Eye Toggle
+const togglePassword = document.getElementById('togglePassword');
+
+togglePassword.addEventListener('click', function () {
+    const icon = this.querySelector('i');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+
+        this.setAttribute('aria-label', 'Hide password');
+    } else {
+        passwordInput.type = 'password';
+
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+
+        this.setAttribute('aria-label', 'Show password');
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>
