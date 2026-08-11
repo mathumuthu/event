@@ -1,3 +1,8 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,14 +139,35 @@ input:focus, select:focus, textarea:focus { outline: none; }
     <div id="headerSearchBox"
          class="relative flex items-center">
 
-        <button id="headerSearchBtn"
-                type="button"
-                class="w-10 h-10 rounded-full
-                       flex items-center justify-center
-                       text-white/80 hover:text-white
-                       hover:bg-white/10 transition-all">
-            <i class="fas fa-search"></i>
-        </button>
+        <!-- Header Search -->
+<div id="headerSearchBox" class="relative flex items-center">
+
+    <input
+        type="text"
+        id="headerSearchInput"
+        placeholder="Search events..."
+        class="absolute right-0 top-0 w-0 opacity-0
+               h-10 rounded-full
+               bg-white/10 backdrop-blur-md
+               border border-white/20
+               text-white text-sm
+               placeholder-white/50
+               pl-4 pr-12
+               transition-all duration-300"
+    >
+
+    <button
+        id="headerSearchBtn"
+        type="button"
+        aria-label="Search"
+        class="relative z-10 w-10 h-10 rounded-full
+               flex items-center justify-center
+               text-white/80 hover:text-white
+               hover:bg-white/10 transition-all duration-300">
+        <i class="fas fa-search"></i>
+    </button>
+
+</div>
 
         <input
             type="text"
@@ -301,7 +327,7 @@ input:focus, select:focus, textarea:focus { outline: none; }
                         </div>
                         <div>
                             <h4 class="font-semibold text-dark text-sm mb-0.5">Visit Us</h4>
-                            <p class="text-gray-600 text-xs leading-relaxed">Evently HQ, 5th Floor, Tech Park,<br>Bangalore, Karnataka 560103</p>
+                            <p class="text-gray-600 text-xs leading-relaxed">Evently HQ, 5th Floor, Tech Park,<br>Salem, Tamil Nadu 560103</p>
                             <p class="text-gray-400 text-xs mt-1">Mon - Fri, 10:00 AM - 6:00 PM</p>
                         </div>
                     </div>
@@ -333,6 +359,32 @@ input:focus, select:focus, textarea:focus { outline: none; }
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========== LOCATION MAP ========== -->
+<section class="pb-16 md:pb-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8" data-aos="fade-up">
+            <p class="font-script text-primary text-2xl md:text-3xl mb-1">Find Us</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-dark mb-2">Our Location</h2>
+            <p class="text-gray-400 text-sm">Visit us at Evently HQ, Salem.</p>
+        </div>
+
+        <div class="overflow-hidden rounded-3xl border border-gray-100 shadow-lg"
+             data-aos="fade-up" data-aos-delay="100">
+            <iframe
+                src="https://www.google.com/maps?q=Evently%20HQ%2C%205th%20Floor%2C%20Tech%20Park%2C%20Bangalore%2C%20Karnataka%20560103&output=embed"
+                width="100%"
+                height="420"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Evently HQ location map">
+            </iframe>
         </div>
     </div>
 </section>
